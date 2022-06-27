@@ -1,0 +1,98 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="View\Controls\home_unclicked.png" />
+      <None Remove="View\Fonts\CircularStd-Black.otf" />
+      <None Remove="View\Fonts\CircularStd-BlackItalic.otf" />
+      <None Remove="View\Fonts\CircularStd-Bold.otf" />
+      <None Remove="View\Fonts\CircularStd-BoldItalic.otf" />
+      <None Remove="View\Fonts\CircularStd-Book.otf" />
+      <None Remove="View\Fonts\CircularStd-BookItalic.otf" />
+      <None Remove="View\Fonts\CircularStd-Light Italic.otf" />
+      <None Remove="View\Fonts\CircularStd-Light.otf" />
+      <None Remove="View\Fonts\CircularStd-Medium.otf" />
+      <None Remove="View\Fonts\CircularStd-MediumItalic.otf" />
+      <None Remove="View\Resources\Icons\home_clicked.png" />
+      <None Remove="View\Resources\Icons\home_unclicked.png" />
+      <None Remove="View\Resources\Icons\home_unclicked_alt.png" />
+      <None Remove="View\Resources\Icons\home_unclicked_small.png" />
+      <None Remove="View\Resources\Icons\library_clicked.png" />
+      <None Remove="View\Resources\Icons\library_unclicked.png" />
+      <None Remove="View\Resources\Icons\library_unclicked_alt.png" />
+      <None Remove="View\Resources\Icons\play.png" />
+      <None Remove="View\Resources\Icons\search_ clicked.png" />
+      <None Remove="View\Resources\Icons\search_unclicked.png" />
+      <None Remove="View\Resources\Icons\search_unclicked_alt.png" />
+      <Content Include="View\Fonts\CircularStd-Black.otf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Fonts\CircularStd-BlackItalic.otf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Fonts\CircularStd-Bold.otf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Fonts\CircularStd-BoldItalic.otf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Fonts\CircularStd-Book.otf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Fonts\CircularStd-BookItalic.otf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Fonts\CircularStd-Light Italic.otf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Fonts\CircularStd-Light.otf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Fonts\CircularStd-Medium.otf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Fonts\CircularStd-MediumItalic.otf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\home_clicked.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\home_unclicked.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\home_unclicked_alt.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\home_unclicked_small.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\library_clicked.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\library_unclicked.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\library_unclicked_alt.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\play.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\search_ clicked.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\search_unclicked.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\search_unclicked_alt.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+</Project>
