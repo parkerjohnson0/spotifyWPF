@@ -1,4 +1,4 @@
-﻿using spotifyWPF.Model;
+﻿using spotifyWPF.Model.Nav;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

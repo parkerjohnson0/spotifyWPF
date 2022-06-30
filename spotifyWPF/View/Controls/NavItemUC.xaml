@@ -20,7 +20,7 @@
             d:Source="../Resources/Icons/home_unclicked_alt.png"
             Source="{Binding Image, RelativeSource={RelativeSource AncestorType=UserControl}}" Width="32" Height="32"/>
         <TextBlock d:Text="Home" 
-                   HorizontalAlignment="left" 
+                   HorizontalAlignment="Left" 
                    VerticalAlignment="Center"
                    Grid.Column="1"
                    d:Foreground="LightGray"

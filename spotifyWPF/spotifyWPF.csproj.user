@@ -2,11 +2,17 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
+    <Compile Update="View\Controls\AuthUC.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Controls\NavItemUC.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="View\Controls\AuthUC.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="View\Controls\NavItemUC.xaml">
       <SubType>Designer</SubType>
     </Page>

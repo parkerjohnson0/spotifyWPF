@@ -7,12 +7,12 @@ using System.Windows.Input;
 
 namespace spotifyWPF.ViewModel.Commands
 {
-    public class HomeCommand : ICommand
+    public class SearchCommand : ICommand
     {
         public event EventHandler? CanExecuteChanged;
 
         private NavVM vm;
-        public HomeCommand(NavVM vm)
+        public SearchCommand(NavVM vm)
         {
             this.vm = vm;
         }
@@ -23,8 +23,7 @@ namespace spotifyWPF.ViewModel.Commands
 
         public void Execute(object? parameter)
         {
-            vm.HomeClicked();
-            
+            vm.SearchClicked();
         }
     }
 }

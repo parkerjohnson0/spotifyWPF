@@ -1,7 +1,8 @@
-﻿using spotifyWPF.Model;
+﻿using spotifyWPF.Model.Nav;
 using spotifyWPF.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,9 @@ namespace spotifyWPF.ViewModel
         public NavButton Search { get; set; }
         public NavButton Library { get; set; }
         public HomeCommand HomeCommand { get; set; }
+        public LibraryCommand LibraryCommand { get; set; }
+        public SearchCommand SearchCommand { get; set; }
+        public ObservableCollection<PlaylistItem> PlaylistItems {get;set;}
 
         public NavVM()
         {
@@ -28,6 +32,8 @@ namespace spotifyWPF.ViewModel
             Search = new NavButton("Search");
             Library = new NavButton("Your Library");
             HomeCommand = new HomeCommand(this);
+            LibraryCommand = new LibraryCommand(this);
+            SearchCommand = new SearchCommand(this);
         }
 
         internal void HomeClicked()
@@ -35,6 +41,19 @@ namespace spotifyWPF.ViewModel
             Home.Active = true;
             Search.Active = false;
             Library.Active = false;
+        }
+        internal void SearchClicked()
+        {
+            Home.Active = false;
+            Search.Active = true;
+            Library.Active = false;
+        }
+
+        internal void LibraryClicked()
+        {
+            Home.Active = false;
+            Search.Active = false;
+            Library.Active = true;
         }
     }
 }

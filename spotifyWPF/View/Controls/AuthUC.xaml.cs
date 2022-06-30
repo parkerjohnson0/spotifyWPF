@@ -1,5 +1,4 @@
-﻿using spotifyWPF.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,26 +9,20 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace spotifyWPF.View
+namespace spotifyWPF.View.Controls
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for AuthUC.xaml
     /// </summary>
-    public partial class RootWindow : Window
+    public partial class AuthUC : UserControl
     {
-        public RootWindow()
+        public AuthUC()
         {
             InitializeComponent();
-            //if (Unauthorized())
-            //{
-            //    AuthWindow auth = new AuthWindow();
-            //    auth.Show();
-            //}
         }
     }
 }
