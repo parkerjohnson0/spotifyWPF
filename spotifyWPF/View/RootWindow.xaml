@@ -27,16 +27,15 @@
                 <ColumnDefinition Width="6*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <Grid ColumnSpan="3" Background="#121212">
-            </Grid>
+            <controls:RootUC Grid.Column="1"/>
             <controls:PlayerUC Grid.Row="1" Grid.ColumnSpan="3" Height="90" />
-            <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Left" >
+            <GridSplitter Grid.Column="1" Width="1"  HorizontalAlignment="Left" >
                 <GridSplitter.Style>
                     <Style TargetType="{x:Type GridSplitter}">
                         <Setter Property="Background" Value="#121212"></Setter>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="LightGray"></Setter>
+                                <Setter Property="Background" Value="#404040"></Setter>
                             </Trigger>
                         </Style.Triggers>
                     </Style>

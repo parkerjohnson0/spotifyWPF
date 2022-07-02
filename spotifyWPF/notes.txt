@@ -1,3 +1,4 @@
+
 ISSUES
 localhost redirection is annoying me. make some kinda actual page to show that it was successful?
 viewmodels may have to pass data back and forth to cut down on API calls
@@ -6,8 +7,26 @@ viewmodels may have to pass data back and forth to cut down on API calls
 recreating friends list functionality
     endpoint for this data is only available through an undocumented endpoint. requires different token to access. 
 
-make auth blur look better. add vignette to background
+
+how to get very different views to be displayed in the root panel
+	have it contain just a base items control? that changes from styling? based off the underlying model type of the bound collection?
 
 
 why is overriding the default scrollbar style so ridiculously annoying
+	have to copy paste 150 lines from the default template. 
     
+after a few days I have confirmed my biases against stackoverflow's dogmatic mvvm nerds
+
+todo
+selecting playlist should deselect other home/lib/search and vice versa
+clean up some stuff from rootvm
+give each vm authorized property which returns from static app.authorized
+	not quite ready to work yet. property wont update 
+make auth blur look better. add vignette to background
+disable interaction with UI until authorized
+use pkce auth flow. so that way token can be stored for longer. otherwise would have to refresh token every hour if access token not replace with refresh token. 
+
+long term
+	store a certain amout of playlists so api doesnt have to be called too much
+	save to file. startup roottemplate should be last selected
+	look into using more dependency properties

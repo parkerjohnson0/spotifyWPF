@@ -11,441 +11,39 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Newtonsoft.Json.Linq;
+using spotifyWPF.Model.App;
 
 namespace spotifyWPF.ViewModel
 {
     public class NavVM : ViewModelBase
     {
         //add ?limit to string to control how many playlists are retrieved. max is 50
-        private string _playlistUrl = "https://api.spotify.com/v1/me/playlists?limit=50";
+        private string _userPlaylistUrl = "https://api.spotify.com/v1/me/playlists?limit=50";
         public NavButton Home { get; set; }
         public NavButton Search { get; set; }
         public NavButton Library { get; set; }
         public HomeCommand HomeCommand { get; set; }
         public LibraryCommand LibraryCommand { get; set; }
         public SearchCommand SearchCommand { get; set; }
+        public SelectPlaylistCommand SelectPlaylistCommand { get; set; }
         public ObservableCollection<PlaylistItem> PlaylistItems {get;set;}
+
+        public bool Authorized
+        {
+            get { return AppState.Authorized; }
+        }
 
         public NavVM()
         {
             CreateButtons();
+            SelectPlaylistCommand = new SelectPlaylistCommand(this); 
             AppState.OnAuthorized += NavVMAuthorized;
-            PlaylistItems = new ObservableCollection<PlaylistItem>()
-            {
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Playlist 1 Playlist 1 Playlist 1",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-                //
-                //new PlaylistItem()
-                //{
-                //    Description = "Test",
-                //    Name = "Retrowave/Synthwave Bullshit",
-                //    Image = "https://mosaic.scdn.co/640/ab67616d0000b27359a428dc7ef8e0c12b0fe18aab67616d0000b2737aede4855f6d0d738012e2e5ab67616d0000b273c5649add07ed3720be9d5526ab67616d0000b273ebbff7725d3ce0739be01787",
-                //    Owner="test"
-                //    
-                //},
-            };
+            PlaylistItems = new ObservableCollection<PlaylistItem>();
         }
 
         private async void NavVMAuthorized(object? sender, EventArgs e)
         {
-            await getPlaylists();
+            await GetPlaylists();
         }
 
         private void CreateButtons()
@@ -463,12 +61,14 @@ namespace spotifyWPF.ViewModel
             Home.Active = true;
             Search.Active = false;
             Library.Active = false;
+            AppState.RootTemplate = RootTemplate.Home;
         }
         internal void SearchClicked()
         {
             Home.Active = false;
             Search.Active = true;
             Library.Active = false;
+            AppState.RootTemplate = RootTemplate.Search;
         }
 
         internal void LibraryClicked()
@@ -476,12 +76,13 @@ namespace spotifyWPF.ViewModel
             Home.Active = false;
             Search.Active = false;
             Library.Active = true;
+            AppState.RootTemplate = RootTemplate.Library;
         }
 
-        private async Task getPlaylists()
+        private async Task GetPlaylists()
         {
-            //loop through endpoint calls until next is null in the response
-            HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, _playlistUrl);
+            //TODO loop through endpoint calls until next is null in the response
+            HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, _userPlaylistUrl);
             req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AppState.AccessToken);
             HttpResponseMessage resp = await HttpClient.SendAsync(req);
             JObject obj = JObject.Parse(resp.Content.ReadAsStringAsync().Result);
@@ -490,11 +91,22 @@ namespace spotifyWPF.ViewModel
                 PlaylistItems.Add(new PlaylistItem()
                 {
                   Description = item["description"].ToString(),
-                  Image = item.SelectToken("images[0].url").ToString(),
+                  Image = item.SelectToken("images[0].url")?.ToString(),
                   Name = item["name"].ToString(),
                   Owner = item.SelectToken("owner.display_name").ToString(),
+                  Link = item.SelectToken("tracks.href").ToString()
                 });    
             }
+        }
+        public void SelectPlaylist(PlaylistItem item)
+        {
+            foreach (PlaylistItem playlistItem in PlaylistItems)
+            {
+                playlistItem.Active = false;
+            }
+            item.Active = true;
+            AppState.RootTemplate = RootTemplate.Playlist;
+            //todo do something with item.link
         }
     }
 }

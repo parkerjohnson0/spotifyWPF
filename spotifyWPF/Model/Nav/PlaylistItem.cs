@@ -11,6 +11,13 @@ namespace spotifyWPF.Model.Nav
 {
     public class PlaylistItem : INotifyPropertyChanged
     {
+        private bool _active;
+
+        public bool Active
+        {
+            get { return _active; }
+            set { _active = value; NotifyPropertyChanged(); }
+        }
         private string _name;
 
         public string Name

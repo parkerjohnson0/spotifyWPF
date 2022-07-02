@@ -18,7 +18,7 @@ namespace spotifyWPF.ViewModel.Commands
         }
         public bool CanExecute(object? parameter)
         {
-            return true;
+            return vm.Authorized;
         }
 
         public void Execute(object? parameter)

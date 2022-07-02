@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using spotifyWPF.Annotations;
+using spotifyWPF.Model.App;
 
 namespace spotifyWPF.ViewModel
 {
@@ -42,7 +43,18 @@ namespace spotifyWPF.ViewModel
     //todo create authorized event that will trigger data fetching in view models?
     public class AppState  : INotifyPropertyChanged
     {
-        public event EventHandler OnAuthorized; 
+        public event EventHandler OnAuthorized;
+
+        private RootTemplate _rootTemplate = RootTemplate.Loading;
+        /// <summary>
+        /// Swaps out data templates used for display in RootUC when set
+        /// </summary>
+        public RootTemplate RootTemplate
+        {
+            get{ return _rootTemplate; }
+            set { _rootTemplate = value; NotifyPropertyChanged(); }
+        }
+
         private bool _authorized;
 
         public bool Authorized

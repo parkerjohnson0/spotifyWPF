@@ -26,7 +26,7 @@
                     <Setter Property="Background" Value="Black" />
                     <Setter Property="Effect">
                         <Setter.Value>
-                            <BlurEffect Radius="0"></BlurEffect>
+                            <BlurEffect Radius="6"></BlurEffect>
                         </Setter.Value>
                     </Setter>
                     <Style.Triggers>
@@ -48,7 +48,6 @@
                     FontSize="16"
                     FontFamily="{StaticResource CircularBold}"
                     Text="Home"
-                    Cursor="Hand"
                     VerticalAlignment="Top"
                     Height="50">
                     <controls:NavItemUC.Style>
@@ -56,15 +55,29 @@
                             <Setter Property="Image" Value="../Resources/Icons/home_unclicked.png" />
                             <Setter Property="Foreground" Value="DarkGray" />
                             <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Image" Value="../Resources/Icons/home_unclicked_alt.png" />
-                                    <Setter Property="Foreground" Value="White" />
-                                </Trigger>
-                                <DataTrigger Binding="{Binding Home.Active}" Value="True">
-                                    <Setter Property="Image" Value="../Resources/Icons/home_clicked.png" />
-                                    <Setter Property="Foreground" Value="White" />
-
-                                </DataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition
+                                            Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}"
+                                            Value="True" />
+                                        <Condition Binding="{Binding AppState.Authorized}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Cursor" Value="Hand" />
+                                        <Setter Property="Foreground" Value="White" />
+                                        <Setter Property="Image" Value="../Resources/Icons/home_unclicked_alt.png" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Home.Active}" Value="True" />
+                                        <Condition Binding="{Binding AppState.Authorized}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Image" Value="../Resources/Icons/home_clicked.png" />
+                                        <Setter Property="Foreground" Value="White" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
                             </Style.Triggers>
                         </Style>
                     </controls:NavItemUC.Style>
@@ -75,7 +88,6 @@
                     Command="{Binding SearchCommand}"
                     FontFamily="{StaticResource CircularBold}"
                     Text="Search"
-                    Cursor="Hand"
                     VerticalAlignment="Top"
                     Height="50">
                     <controls:NavItemUC.Style>
@@ -83,14 +95,29 @@
                             <Setter Property="Image" Value="../Resources/Icons/search_unclicked.png" />
                             <Setter Property="Foreground" Value="DarkGray" />
                             <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Image" Value="../Resources/Icons/search_unclicked_alt.png" />
-                                    <Setter Property="Foreground" Value="White" />
-                                </Trigger>
-                                <DataTrigger Binding="{Binding Path=Search.Active}" Value="True">
-                                    <Setter Property="Image" Value="../Resources/Icons/search_clicked.png" />
-                                    <Setter Property="Foreground" Value="White" />
-                                </DataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition
+                                            Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}"
+                                            Value="True" />
+                                        <Condition Binding="{Binding AppState.Authorized}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Cursor" Value="Hand" />
+                                        <Setter Property="Foreground" Value="White" />
+                                        <Setter Property="Image" Value="../Resources/Icons/search_unclicked_alt.png" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Search.Active}" Value="True" />
+                                        <Condition Binding="{Binding AppState.Authorized}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Image" Value="../Resources/Icons/search_clicked.png" />
+                                        <Setter Property="Foreground" Value="White" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
                             </Style.Triggers>
 
                         </Style>
@@ -102,7 +129,6 @@
                     Command="{Binding LibraryCommand}"
                     FontFamily="{StaticResource CircularBold}"
                     Text="Your Library"
-                    Cursor="Hand"
                     VerticalAlignment="Top"
                     Height="50">
                     <controls:NavItemUC.Style>
@@ -110,14 +136,29 @@
                             <Setter Property="Image" Value="../Resources/Icons/library_unclicked.png" />
                             <Setter Property="Foreground" Value="DarkGray" />
                             <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Image" Value="../Resources/Icons/library_unclicked_alt.png" />
-                                    <Setter Property="Foreground" Value="White" />
-                                </Trigger>
-                                <DataTrigger Binding="{Binding Path=Library.Active}" Value="True">
-                                    <Setter Property="Image" Value="../Resources/Icons/library_clicked.png" />
-                                    <Setter Property="Foreground" Value="White" />
-                                </DataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition
+                                            Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}"
+                                            Value="True" />
+                                        <Condition Binding="{Binding AppState.Authorized}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Cursor" Value="Hand" />
+                                        <Setter Property="Foreground" Value="White" />
+                                        <Setter Property="Image" Value="../Resources/Icons/library_unclicked_alt.png" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Library.Active}" Value="True" />
+                                        <Condition Binding="{Binding AppState.Authorized}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Image" Value="../Resources/Icons/library_clicked.png" />
+                                        <Setter Property="Foreground" Value="White" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
                             </Style.Triggers>
                         </Style>
                     </controls:NavItemUC.Style>
@@ -135,64 +176,8 @@
                       FontSize="14"
                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                      Margin="10,10,0,0"
-                      Padding="8,0,0,0">
-
-                <ListView.Resources>
-                    
-                    <Style TargetType="{x:Type ScrollViewer}">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="ScrollViewer">
-                                    <Border CornerRadius="2" BorderBrush="{TemplateBinding BorderBrush}"
-                                            BorderThickness="{TemplateBinding BorderThickness}">
-                                        <Grid Background="{TemplateBinding Background}">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="*" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <ScrollContentPresenter x:Name="ScrollContentPresenter"
-                                                                    Cursor="{TemplateBinding Cursor}"
-                                                                    Margin="{TemplateBinding Padding}"
-                                                                    ContentTemplate="{TemplateBinding ContentTemplate}" />
-
-                                            <Rectangle Grid.Column="1" Grid.Row="1" Fill="#FFE9EEF4" />
-
-                                            <ScrollBar x:Name="VerticalScrollBar" Width="18"
-                                                       Style="{StaticResource {x:Type ScrollBar}}"
-                                                       IsTabStop="False"
-                                                       Background="Transparent"
-                                                       BorderBrush="Transparent"
-                                                       Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
-                                                       Grid.Column="1" Grid.Row="0" Orientation="Vertical"
-                                                       ViewportSize="{TemplateBinding ViewportHeight}"
-                                                       Maximum="{TemplateBinding ScrollableHeight}"
-                                                       Minimum="0"
-                                                       Value="{TemplateBinding VerticalOffset}"
-                                                       Margin="0,-1,-1,-1" />
-
-                                            <ScrollBar x:Name="HorizontalScrollBar" Height="18"
-                                                       IsTabStop="False"
-                                                       Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
-                                                       Grid.Column="0" Grid.Row="1" Orientation="Horizontal"
-                                                       ViewportSize="{TemplateBinding ViewportWidth}"
-                                                       Maximum="{TemplateBinding ScrollableWidth}"
-                                                       Minimum="0"
-                                                       Value="{TemplateBinding HorizontalOffset}"
-                                                       Margin="-1,0,-1,-1" />
-
-                                        </Grid>
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListView.Resources>
+                      Margin="10,3,0,0"
+                      Padding="8,9,0,0">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="{x:Type ListViewItem}">
                         <Style.Triggers>
@@ -200,7 +185,7 @@
                                 <Setter Property="Foreground" Value="White" />
                             </Trigger>
                         </Style.Triggers>
-                        <Setter Property="Margin" Value="0,0"></Setter>
+                        <Setter Property="Margin" Value="0,2,0,0"></Setter>
                         <Setter Property="Foreground" Value="DarkGray"></Setter>
                         <Setter Property="Background" Value="Transparent"></Setter>
                         <Setter Property="Template">
@@ -214,7 +199,24 @@
                                                                   Content="{TemplateBinding Content}" />
                                             <TextBlock Text="{Binding Name}"
                                                        Padding="0,5"
-                                                       TextTrimming="CharacterEllipsis" />
+                                                       TextTrimming="CharacterEllipsis">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Active}" Value="True">
+                                                                <Setter Property="Foreground" Value="White" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                                <TextBlock.InputBindings>
+                                                    <MouseBinding MouseAction="LeftClick"
+                                                                  CommandParameter="{Binding .}"
+                                                                  Command="{Binding DataContext.SelectPlaylistCommand,
+                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}" />
+                                                </TextBlock.InputBindings>
+                                            </TextBlock>
+
                                         </StackPanel>
                                     </Border>
                                 </ControlTemplate>
