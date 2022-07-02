@@ -11,7 +11,6 @@ namespace spotifyWPF.ViewModel
 {
     public class RootVM : ViewModelBase
     {
-        
         private BlurEffect _winBlur;
 
         public BlurEffect WinBlur
