@@ -27,15 +27,14 @@ namespace spotifyWPF.ViewModel
             get { return _winBlur; }
             set { _winBlur = value; }
         }
-        public AppState AppState { get; set; }
-        public RootVM(AppState state) : this()
-        {
-            state = AppState;
-            // _winBlur = new BlurEffect();
-            // _winBlur.Radius = 7;
-        }
 
         public RootVM()
+        {
+            AppState.OnAuthorized += RootVMAuthorized;
+
+        }
+
+        private void RootVMAuthorized(object? sender, EventArgs e)
         {
             
         }

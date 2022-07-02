@@ -1,0 +1,13 @@
+ISSUES
+localhost redirection is annoying me. make some kinda actual page to show that it was successful?
+viewmodels may have to pass data back and forth to cut down on API calls
+    EG. NavVM makes call to get all playlists, parse and send api song list endpoint to RootVM whenever playlist link is clicked.
+    
+recreating friends list functionality
+    endpoint for this data is only available through an undocumented endpoint. requires different token to access. 
+
+make auth blur look better. add vignette to background
+
+
+why is overriding the default scrollbar style so ridiculously annoying
+    

@@ -51,7 +51,8 @@ namespace spotifyWPF.AuthServer
         public void OpenBrowser()
         {
             string url =
-                $"{BASE_URL}authorize?client_id={CLIENT_ID}&response_type={RESPONSE_TYPE}&redirect_uri={REDIRECT_URI}";
+                $"{BASE_URL}authorize?client_id={CLIENT_ID}&response_type={RESPONSE_TYPE}&redirect_uri={REDIRECT_URI}" +
+                "&scope=playlist-read-collaborative playlist-modify-public playlist-read-private playlist-modify-private";
             Process proc = new Process();
             proc.StartInfo.UseShellExecute = true;
             proc.StartInfo.FileName = url;
@@ -66,7 +67,8 @@ namespace spotifyWPF.AuthServer
             {
                 { "grant_type", "authorization_code" },
                 { "code", code },
-                { "redirect_uri", REDIRECT_URI }
+                { "redirect_uri", REDIRECT_URI },
+                
             };
             byte[] bytes = Encoding.UTF8.GetBytes($"{CLIENT_ID}:{CLIENT_SECRET}");
             string url = $"{BASE_URL}api/token";

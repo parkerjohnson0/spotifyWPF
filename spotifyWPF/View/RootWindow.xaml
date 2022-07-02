@@ -14,36 +14,37 @@
 
     </Window.DataContext>
     <Window.Resources>
-        
+
     </Window.Resources>
     <Grid>
-        <DockPanel>
-            <DockPanel.Style>
-                <Style TargetType="{x:Type DockPanel}">
-                    <Setter Property="Effect">
-                        <Setter.Value>
-                            <BlurEffect Radius="8"></BlurEffect>
-                        </Setter.Value>
-                    </Setter>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding AppState.Authorized}"
-                                     Value="True">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                            <Setter Property="Effect">
-                                <Setter.Value>
-                                    <BlurEffect Radius="1"></BlurEffect>
-                                </Setter.Value>
-                            </Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DockPanel.Style>
-            <controls:PlayerUC DockPanel.Dock="Bottom" Height="90" />
-            <controls:NavUC DockPanel.Dock="Left" Width="200" />
-            <controls:FriendsUC DockPanel.Dock="Right" Width="200" HorizontalAlignment="Right" />
-            <Grid Background="#121212">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="90"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid ColumnSpan="3" Background="#121212">
             </Grid>
-        </DockPanel>
+            <controls:PlayerUC Grid.Row="1" Grid.ColumnSpan="3" Height="90" />
+            <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Left" >
+                <GridSplitter.Style>
+                    <Style TargetType="{x:Type GridSplitter}">
+                        <Setter Property="Background" Value="#121212"></Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="LightGray"></Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </GridSplitter.Style>
+            </GridSplitter>
+            <controls:NavUC Grid.Column="0" />
+            <controls:FriendsUC Grid.Column="2"  />
+        </Grid>
         <controls:AuthUC Height="100"
                          Width="240">
             <controls:AuthUC.Style>

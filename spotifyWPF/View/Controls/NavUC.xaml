@@ -15,101 +15,214 @@
     <UserControl.Resources>
         <conv:ButtonConverter x:Key="ButtonConv" />
     </UserControl.Resources>
-    <Grid>
-        <Grid.Style>
+    <Border Background="Black">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="150" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Setter Property="Background" Value="Black" />
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <BlurEffect Radius="0"></BlurEffect>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding AppState.Authorized}"
+                                     Value="True">
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <BlurEffect Radius="0"></BlurEffect>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <StackPanel>
+                <controls:NavItemUC
+                    Background="Transparent"
+                    Command="{Binding HomeCommand}"
+                    FontSize="16"
+                    FontFamily="{StaticResource CircularBold}"
+                    Text="Home"
+                    Cursor="Hand"
+                    VerticalAlignment="Top"
+                    Height="50">
+                    <controls:NavItemUC.Style>
+                        <Style TargetType="{x:Type controls:NavItemUC}">
+                            <Setter Property="Image" Value="../Resources/Icons/home_unclicked.png" />
+                            <Setter Property="Foreground" Value="DarkGray" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Image" Value="../Resources/Icons/home_unclicked_alt.png" />
+                                    <Setter Property="Foreground" Value="White" />
+                                </Trigger>
+                                <DataTrigger Binding="{Binding Home.Active}" Value="True">
+                                    <Setter Property="Image" Value="../Resources/Icons/home_clicked.png" />
+                                    <Setter Property="Foreground" Value="White" />
 
-            <Style TargetType="{x:Type Grid}">
-                <Setter Property="Background" Value="Black" />
-            </Style>
-        </Grid.Style>
-        <StackPanel>
-            <controls:NavItemUC
-                Background="Transparent"
-                Command="{Binding HomeCommand}"
-                FontSize="16"
-                FontFamily="{StaticResource CircularMedium}"
-                Text="Home"
-                Cursor="Hand"
-                VerticalAlignment="Top"
-                Height="50">
-                <controls:NavItemUC.Style>
-                    <Style TargetType="{x:Type controls:NavItemUC}">
-                        <Setter Property="Image" Value="../Resources/Icons/home_unclicked.png" />
-                        <Setter Property="Foreground" Value="LightGray" />
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Image" Value="../Resources/Icons/home_unclicked_alt.png" />
-                                <Setter Property="Foreground" Value="White" />
-                            </Trigger>
-                            <DataTrigger Binding="{Binding Home.Active}" Value="True">
-                                <Setter Property="Image" Value="../Resources/Icons/home_clicked.png" />
-                                <Setter Property="Foreground" Value="White" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:NavItemUC.Style>
+                </controls:NavItemUC>
+                <controls:NavItemUC
+                    Background="Transparent"
+                    FontSize="16"
+                    Command="{Binding SearchCommand}"
+                    FontFamily="{StaticResource CircularBold}"
+                    Text="Search"
+                    Cursor="Hand"
+                    VerticalAlignment="Top"
+                    Height="50">
+                    <controls:NavItemUC.Style>
+                        <Style TargetType="{x:Type controls:NavItemUC}">
+                            <Setter Property="Image" Value="../Resources/Icons/search_unclicked.png" />
+                            <Setter Property="Foreground" Value="DarkGray" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Image" Value="../Resources/Icons/search_unclicked_alt.png" />
+                                    <Setter Property="Foreground" Value="White" />
+                                </Trigger>
+                                <DataTrigger Binding="{Binding Path=Search.Active}" Value="True">
+                                    <Setter Property="Image" Value="../Resources/Icons/search_clicked.png" />
+                                    <Setter Property="Foreground" Value="White" />
+                                </DataTrigger>
+                            </Style.Triggers>
 
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </controls:NavItemUC.Style>
-            </controls:NavItemUC>
-            <controls:NavItemUC
-                Background="Transparent"
-                FontSize="16"
-                Command="{Binding SearchCommand}"
-                FontFamily="{StaticResource CircularMedium}"
-                Text="Search"
-                Cursor="Hand"
-                VerticalAlignment="Top"
-                Height="50">
-                <controls:NavItemUC.Style>
-                    <Style TargetType="{x:Type controls:NavItemUC}">
-                        <Setter Property="Image" Value="../Resources/Icons/search_unclicked.png" />
-                        <Setter Property="Foreground" Value="LightGray" />
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Image" Value="../Resources/Icons/search_unclicked_alt.png" />
-                                <Setter Property="Foreground" Value="White" />
-                            </Trigger>
-                            <DataTrigger Binding="{Binding Path=Search.Active}" Value="True">
-                                <Setter Property="Image" Value="../Resources/Icons/search_clicked.png" />
-                                <Setter Property="Foreground" Value="White" />
-                            </DataTrigger>
-                        </Style.Triggers>
-
-                    </Style>
-                </controls:NavItemUC.Style>
-            </controls:NavItemUC>
-            <controls:NavItemUC
-                Background="Transparent"
-                FontSize="16"
-                Command="{Binding LibraryCommand}"
-                FontFamily="{StaticResource CircularMedium}"
-                Text="Your Library"
-                Cursor="Hand"
-                VerticalAlignment="Top"
-                Height="50">
-                <controls:NavItemUC.Style>
-                    <Style TargetType="{x:Type controls:NavItemUC}">
-                        <Setter Property="Image" Value="../Resources/Icons/library_unclicked.png" />
-                        <Setter Property="Foreground" Value="LightGray" />
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Image" Value="../Resources/Icons/library_unclicked_alt.png" />
-                                <Setter Property="Foreground" Value="White" />
-                            </Trigger>
-                            <DataTrigger Binding="{Binding Path=Library.Active}" Value="True">
-                                <Setter Property="Image" Value="../Resources/Icons/library_clicked.png" />
-                                <Setter Property="Foreground" Value="White" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </controls:NavItemUC.Style>
-            </controls:NavItemUC>
+                        </Style>
+                    </controls:NavItemUC.Style>
+                </controls:NavItemUC>
+                <controls:NavItemUC
+                    Background="Transparent"
+                    FontSize="16"
+                    Command="{Binding LibraryCommand}"
+                    FontFamily="{StaticResource CircularBold}"
+                    Text="Your Library"
+                    Cursor="Hand"
+                    VerticalAlignment="Top"
+                    Height="50">
+                    <controls:NavItemUC.Style>
+                        <Style TargetType="{x:Type controls:NavItemUC}">
+                            <Setter Property="Image" Value="../Resources/Icons/library_unclicked.png" />
+                            <Setter Property="Foreground" Value="DarkGray" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Image" Value="../Resources/Icons/library_unclicked_alt.png" />
+                                    <Setter Property="Foreground" Value="White" />
+                                </Trigger>
+                                <DataTrigger Binding="{Binding Path=Library.Active}" Value="True">
+                                    <Setter Property="Image" Value="../Resources/Icons/library_clicked.png" />
+                                    <Setter Property="Foreground" Value="White" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:NavItemUC.Style>
+                </controls:NavItemUC>
+            </StackPanel>
+            <Border VerticalAlignment="Top" Grid.Row="1" Height="0.5" Margin="10,5,10,5" Width="Auto"
+                    Background="DimGray">
+            </Border>
             <ListView VerticalAlignment="Stretch"
+                      Grid.Row="1"
                       ItemsSource="{Binding PlaylistItems}"
-                      BorderThickness="0,1,0,0"
-                      BorderBrush="LightGray"
-                      Margin="10,20">
+                      BorderBrush="Transparent"
+                      Background="Transparent"
+                      FontFamily="{StaticResource CircularBook}"
+                      FontSize="14"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      Margin="10,10,0,0"
+                      Padding="8,0,0,0">
 
+                <ListView.Resources>
+                    
+                    <Style TargetType="{x:Type ScrollViewer}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ScrollViewer">
+                                    <Border CornerRadius="2" BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}">
+                                        <Grid Background="{TemplateBinding Background}">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <ScrollContentPresenter x:Name="ScrollContentPresenter"
+                                                                    Cursor="{TemplateBinding Cursor}"
+                                                                    Margin="{TemplateBinding Padding}"
+                                                                    ContentTemplate="{TemplateBinding ContentTemplate}" />
+
+                                            <Rectangle Grid.Column="1" Grid.Row="1" Fill="#FFE9EEF4" />
+
+                                            <ScrollBar x:Name="VerticalScrollBar" Width="18"
+                                                       Style="{StaticResource {x:Type ScrollBar}}"
+                                                       IsTabStop="False"
+                                                       Background="Transparent"
+                                                       BorderBrush="Transparent"
+                                                       Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                                                       Grid.Column="1" Grid.Row="0" Orientation="Vertical"
+                                                       ViewportSize="{TemplateBinding ViewportHeight}"
+                                                       Maximum="{TemplateBinding ScrollableHeight}"
+                                                       Minimum="0"
+                                                       Value="{TemplateBinding VerticalOffset}"
+                                                       Margin="0,-1,-1,-1" />
+
+                                            <ScrollBar x:Name="HorizontalScrollBar" Height="18"
+                                                       IsTabStop="False"
+                                                       Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                                                       Grid.Column="0" Grid.Row="1" Orientation="Horizontal"
+                                                       ViewportSize="{TemplateBinding ViewportWidth}"
+                                                       Maximum="{TemplateBinding ScrollableWidth}"
+                                                       Minimum="0"
+                                                       Value="{TemplateBinding HorizontalOffset}"
+                                                       Margin="-1,0,-1,-1" />
+
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.Resources>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </Style.Triggers>
+                        <Setter Property="Margin" Value="0,0"></Setter>
+                        <Setter Property="Foreground" Value="DarkGray"></Setter>
+                        <Setter Property="Background" Value="Transparent"></Setter>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                    <Border BorderBrush="Transparent">
+                                        <StackPanel>
+                                            <GridViewRowPresenter HorizontalAlignment="Stretch"
+                                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                                  Width="Auto" Margin="0"
+                                                                  Content="{TemplateBinding Content}" />
+                                            <TextBlock Text="{Binding Name}"
+                                                       Padding="0,5"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </StackPanel>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
             </ListView>
-        </StackPanel>
-    </Grid>
+        </Grid>
+    </Border>
 </UserControl>
