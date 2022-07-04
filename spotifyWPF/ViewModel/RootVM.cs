@@ -37,7 +37,7 @@ namespace spotifyWPF.ViewModel
                    Album = "Twin Cinema",
                    Artist = "The New Pornographers",
                    DurationMS = 267146,
-                   Title = "THe Bleeding Heart Show",
+                   Title = "The Bleeding Heart Show",
                    DateAdded = DateTime.Parse( "2019-12-22T07:03:59Z"),
                    ListIndex = 1
                 },
@@ -47,7 +47,7 @@ namespace spotifyWPF.ViewModel
                    Artist = "The New Pornographers",
                    Album = "Twin Cinema",
                    DurationMS = 267146,
-                   Title = "THe Bleeding Heart Show",
+                   Title = "The Bleeding Heart Show",
                    DateAdded = DateTime.Parse( "2019-12-22T07:03:59Z"), 
                    ListIndex = 2
                 },
@@ -57,7 +57,7 @@ namespace spotifyWPF.ViewModel
                    Artist = "The New Pornographers",
                    Album = "Twin Cinema",
                    DurationMS = 267146,
-                   Title = "THe Bleeding Heart Show",
+                   Title = "The Bleeding Heart Show",
                    DateAdded = DateTime.Parse( "2019-12-22T07:03:59Z"),
                    ListIndex = 3
                 },

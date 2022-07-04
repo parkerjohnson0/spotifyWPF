@@ -144,6 +144,28 @@
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="Cursor" Value="Hand" />
             </Style>
+            <DataTemplate x:Key="PlaylistHeader">
+                <TextBlock>
+                    <TextBlock.Text>
+                    <Binding/>
+                    </TextBlock.Text>
+                </TextBlock>
+                
+            </DataTemplate>
+            <Style TargetType="GridViewColumnHeader" x:Key="PlaylistGrid">
+                <Setter Property="Foreground" Value="#bbb7ca"></Setter>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/> 
+               <Setter Property="Background" Value="Transparent"/>
+               <Setter Property="BorderBrush" Value="Transparent"/>
+               <Setter Property="BorderThickness" Value="0,0,0,32"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
             <Style x:Key="navItem" TargetType="{x:Type controls:NavItemUC}">
 
             </Style>
@@ -338,19 +360,22 @@
                     <Grid Grid.Row="1" >
                      <ListView Background="#121212"
                                x:Name="lv"
-                               AlternationCount="1000"
+                               Padding="25,0"
                                BorderThickness="0"
+                               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                ItemsSource="{Binding SelectedPlaylistItem.SongsList}">
                          <ListView.View>
-                             <GridView>
-                                 <GridViewColumn Header="#" Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
+                             <GridView AllowsColumnReorder="False">
+                                 <GridViewColumn Header="#" Width="25" HeaderTemplate="{StaticResource PlaylistHeader}"
+                                                 HeaderContainerStyle="{StaticResource PlaylistGrid}">
                                      <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
+                                         <DataTemplate>
                                             <TextBlock Text="{Binding ListIndex}" ></TextBlock>
                                         </DataTemplate> 
                                      </GridViewColumn.CellTemplate>
                                  </GridViewColumn>
-                                 <GridViewColumn Header="Title" Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
+                                 <GridViewColumn Header="TITLE" HeaderContainerStyle="{StaticResource PlaylistGrid}"
+                                                 Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
                                      <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
@@ -363,17 +388,27 @@
                                         </DataTemplate> 
                                      </GridViewColumn.CellTemplate>
                                  </GridViewColumn>
-                                 <GridViewColumn Header="Album" Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
+                                 <GridViewColumn Header="ALBUM" HeaderContainerStyle="{StaticResource PlaylistGrid}"
+                                                 Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
                                      <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                                     <TextBlock Text="{Binding Album}" ></TextBlock>
                                         </DataTemplate> 
                                      </GridViewColumn.CellTemplate>
                                  </GridViewColumn>
-                                 <GridViewColumn Header="🕒" Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
+                                 <GridViewColumn Header="DATE ADDED" HeaderContainerStyle="{StaticResource PlaylistGrid}"
+                                                 Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
                                      <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                                     <TextBlock Text="{Binding DateAdded}" ></TextBlock>
+                                        </DataTemplate> 
+                                     </GridViewColumn.CellTemplate>
+                                 </GridViewColumn>
+                                 <GridViewColumn Header="🕒" HeaderContainerStyle="{StaticResource PlaylistGrid}"
+                                                 Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
+                                     <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                                    <TextBlock Text="{Binding Duration}" ></TextBlock>
                                         </DataTemplate> 
                                      </GridViewColumn.CellTemplate>
                                  </GridViewColumn>

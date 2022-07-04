@@ -9,10 +9,19 @@ public class Track
    public string Album { get; set; }
    public string AlbumArt { get; set; }
    public long DurationMS { get; set; }
+
    /// <summary>
    /// Formatted mm:ss duration
    /// </summary>
-   public string Duration { get; set; }
+   public string Duration {
+      get
+      {
+         long seconds = DurationMS / 1000;
+         long minutesLength = seconds / 60;
+         long secondsLength = seconds % 60;
+         return $"{minutesLength}:{secondsLength}";
+      }
+   }
    public DateTime DateAdded { get; set; }
    public int ListIndex { get; set; }
 }
