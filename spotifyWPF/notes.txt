@@ -1,3 +1,9 @@
+TEST SELECTEDPLAYLIST FOR STYLING
+active true
+image https://i.scdn.co/image/ab67706c0000bebb18b830788ea8914e1da3292d
+name Retrowave/Synthwave
+link https://api.spotify.com/v1/playlists/3ebHKSjHujS4Tyt2KKP97R/tracks
+owner Cheerzo
 
 ISSUES
 localhost redirection is annoying me. make some kinda actual page to show that it was successful?
@@ -27,6 +33,7 @@ disable interaction with UI until authorized
 use pkce auth flow. so that way token can be stored for longer. otherwise would have to refresh token every hour if access token not replace with refresh token. 
 
 long term
+    create fake gridsplitter. make width 10px, but transparent. change border of hovered panel to emulate look. emulate real spotify thing
 	store a certain amout of playlists so api doesnt have to be called too much
 	save to file. startup roottemplate should be last selected
 	look into using more dependency properties

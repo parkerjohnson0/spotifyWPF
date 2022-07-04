@@ -106,7 +106,7 @@ namespace spotifyWPF.ViewModel
             }
             item.Active = true;
             AppState.RootTemplate = RootTemplate.Playlist;
-            //todo do something with item.link
+            AppState.SelectedPlaylistItem = item;
         }
     }
 }

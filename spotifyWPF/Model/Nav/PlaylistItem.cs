@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using spotifyWPF.Model.App;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +32,7 @@ namespace spotifyWPF.Model.Nav
         public string Owner { get; set; }
         public string Link { get; set; }
         public string Image { get; set; }
+        public ObservableCollection<Track> SongsList { get; set; }
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)

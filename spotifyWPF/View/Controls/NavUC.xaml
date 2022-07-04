@@ -175,6 +175,7 @@
                       FontFamily="{StaticResource CircularBook}"
                       FontSize="14"
                       ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.CanContentScroll="False"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                       Margin="10,3,0,0"
                       Padding="8,9,0,0">

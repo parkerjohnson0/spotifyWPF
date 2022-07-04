@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using spotifyWPF.Annotations;
 using spotifyWPF.Model.App;
+using spotifyWPF.Model.Nav;
 
 namespace spotifyWPF.ViewModel
 {
@@ -44,8 +46,9 @@ namespace spotifyWPF.ViewModel
     public class AppState  : INotifyPropertyChanged
     {
         public event EventHandler OnAuthorized;
+        public event EventHandler OnPlaylistDataUpdated;
 
-        private RootTemplate _rootTemplate = RootTemplate.Loading;
+        private RootTemplate _rootTemplate = RootTemplate.Playlist;
         /// <summary>
         /// Swaps out data templates used for display in RootUC when set
         /// </summary>
@@ -71,6 +74,18 @@ namespace spotifyWPF.ViewModel
             }
         }
 
+        private PlaylistItem _selectedPlaylistItem;
+
+        public PlaylistItem SelectedPlaylistItem
+        {
+            get { return _selectedPlaylistItem; }
+            set
+            {
+                _selectedPlaylistItem = value;
+                if (_selectedPlaylistItem != null) OnPlaylistDataUpdated(this, EventArgs.Empty);
+                NotifyPropertyChanged();
+            }
+        }
         private string _accessToken;
 
         public string AccessToken

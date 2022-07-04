@@ -3,12 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:spotifyWPF.View.Controls"
              xmlns:vm="clr-namespace:spotifyWPF.ViewModel"
+             xmlns:conv="clr-namespace:spotifyWPF.ViewModel.Converters"
              xmlns:local="clr-namespace:spotifyWPF"
              StartupUri="View/RootWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <conv:ColumnWidthConverter x:Key="ColumnWidthConv"/>
             <!-- Fill Brushes -->
-
             <LinearGradientBrush x:Key="NormalBrush" StartPoint="0,0" EndPoint="0,1">
                 <GradientBrush.GradientStops>
                     <GradientStopCollection>
@@ -298,14 +299,114 @@
             </Style>
             <DataTemplate x:Key="Playlist" DataType="{x:Type vm:RootVM}">
                 <Grid Background="#121212">
-                    <TextBlock Foreground="DarkGray" Text="PLAYLIST" />
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="250"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="240" />
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Width="200" Height="200"
+                                   Margin="10,0"
+                                   Grid.Column="0" VerticalAlignment="Bottom"
+                                   Source="{Binding SelectedPlaylistItem.Image}"></Image>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Bottom"
+                                Margin="10,0,0,0" >
+                                <TextBlock Text="PLAYLIST" 
+                                           Foreground="White" FontFamily="{StaticResource CircularBold}"/>
+                                <TextBlock Foreground="White"  Margin="0,5"
+                                           TextWrapping="Wrap"
+                                           FontSize="32"
+                                           FontFamily="{StaticResource CircularBold}"
+                                    Text="{Binding SelectedPlaylistItem.Name}"/>
+                                <TextBlock Foreground="#bbb7ca" Margin="0,5"
+                                           TextWrapping="Wrap"
+                                           FontSize="16"
+                                           FontFamily="{StaticResource CircularMedium}"
+                                    Text="{Binding SelectedPlaylistItem.Description}"/>
+                                <TextBlock Margin="0,5">
+                                    <Run Text="{Binding SelectedPlaylistItem.Owner}"
+                                         Foreground="White"
+                                         FontFamily="{StaticResource CircularBook}"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                    <Grid Grid.Row="1" >
+                     <ListView Background="#121212"
+                               x:Name="lv"
+                               AlternationCount="1000"
+                               BorderThickness="0"
+                               ItemsSource="{Binding SelectedPlaylistItem.SongsList}">
+                         <ListView.View>
+                             <GridView>
+                                 <GridViewColumn Header="#" Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
+                                     <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ListIndex}" ></TextBlock>
+                                        </DataTemplate> 
+                                     </GridViewColumn.CellTemplate>
+                                 </GridViewColumn>
+                                 <GridViewColumn Header="Title" Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
+                                     <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                               <Image Source="{Binding AlbumArt}" Width="32" Height="32"/> 
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Title}" ></TextBlock>
+                                                <TextBlock Text="{Binding Artist}" ></TextBlock>
+                                            </StackPanel>
+                                            </StackPanel>
+                                        </DataTemplate> 
+                                     </GridViewColumn.CellTemplate>
+                                 </GridViewColumn>
+                                 <GridViewColumn Header="Album" Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
+                                     <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                                    <TextBlock Text="{Binding Album}" ></TextBlock>
+                                        </DataTemplate> 
+                                     </GridViewColumn.CellTemplate>
+                                 </GridViewColumn>
+                                 <GridViewColumn Header="🕒" Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
+                                     <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                                    <TextBlock Text="{Binding DateAdded}" ></TextBlock>
+                                        </DataTemplate> 
+                                     </GridViewColumn.CellTemplate>
+                                 </GridViewColumn>
+                             </GridView>
+                         </ListView.View>
+                         <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Setter Property="Foreground" Value="LightGray"/>  
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                            <Border BorderBrush="Transparent">
+                                                <StackPanel>
+                                                    <GridViewRowPresenter HorizontalAlignment="Stretch"
+                                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                                          Width="Auto" Margin="0"
+                                                                          Content="{TemplateBinding Content}" />
+
+                                                </StackPanel>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                
+                            </Style>
+                        </ListView.ItemContainerStyle>     
+                     </ListView>   
+                    </Grid>
                 </Grid>
             </DataTemplate>
             <DataTemplate x:Key="Home" DataType="{x:Type vm:RootVM}">
                 <Grid Background="#121212">
-                    <StackPanel>
-                        <TextBlock Foreground="DarkGray" Text="HOME" />
-                    </StackPanel>
                 </Grid>
             </DataTemplate>
             <DataTemplate x:Key="Loading" DataType="{x:Type vm:RootVM}">

@@ -52,7 +52,8 @@ namespace spotifyWPF.AuthServer
         {
             string url =
                 $"{BASE_URL}authorize?client_id={CLIENT_ID}&response_type={RESPONSE_TYPE}&redirect_uri={REDIRECT_URI}" +
-                "&scope=playlist-read-collaborative playlist-modify-public playlist-read-private playlist-modify-private";
+                "&scope=playlist-read-collaborative playlist-modify-public playlist-read-private playlist-modify-private " +
+                "user-read-playback-state streaming";
             Process proc = new Process();
             proc.StartInfo.UseShellExecute = true;
             proc.StartInfo.FileName = url;

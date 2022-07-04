@@ -29,7 +29,7 @@
             </Grid.ColumnDefinitions>
             <controls:RootUC Grid.Column="1"/>
             <controls:PlayerUC Grid.Row="1" Grid.ColumnSpan="3" Height="90" />
-            <GridSplitter Grid.Column="1" Width="1"  HorizontalAlignment="Left" >
+            <GridSplitter Grid.Column="1" Width="4"  HorizontalAlignment="Left" >
                 <GridSplitter.Style>
                     <Style TargetType="{x:Type GridSplitter}">
                         <Setter Property="Background" Value="#121212"></Setter>
