@@ -19,7 +19,8 @@ public class Track
          long seconds = DurationMS / 1000;
          long minutesLength = seconds / 60;
          long secondsLength = seconds % 60;
-         return $"{minutesLength}:{secondsLength}";
+         string pad = secondsLength < 10 ? "0" : "";
+         return $"{minutesLength}:{pad}{secondsLength}";
       }
    }
    public DateTime DateAdded { get; set; }

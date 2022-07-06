@@ -37,3 +37,8 @@ long term
 	store a certain amout of playlists so api doesnt have to be called too much
 	save to file. startup roottemplate should be last selected
 	look into using more dependency properties
+
+
+COMPLETED
+    ROOTVM GETTING MADE TWICE SO UPDATE EVENTS TRIGGERING TOO MUCH
+    SOLUTION: PROBABLY CHANGE ROOTWINDOW TO USE ITS OWNVM

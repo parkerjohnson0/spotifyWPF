@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using spotifyWPF.Annotations;
 using spotifyWPF.Model.App;
 using spotifyWPF.Model.Nav;
 
@@ -82,7 +81,10 @@ namespace spotifyWPF.ViewModel
             set
             {
                 _selectedPlaylistItem = value;
-                if (_selectedPlaylistItem != null) OnPlaylistDataUpdated(this, EventArgs.Empty);
+                if (_selectedPlaylistItem != null)
+                {
+                    OnPlaylistDataUpdated(this, EventArgs.Empty);
+                }
                 NotifyPropertyChanged();
             }
         }

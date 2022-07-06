@@ -2,9 +2,9 @@
 
 namespace spotifyWPF.View.Controls;
 
-public partial class RootUC : UserControl
+public partial class DisplayUC : UserControl
 {
-    public RootUC()
+    public DisplayUC()
     {
         InitializeComponent();
     }

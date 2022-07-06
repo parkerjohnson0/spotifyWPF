@@ -94,12 +94,15 @@ namespace spotifyWPF.ViewModel
                   Image = item.SelectToken("images[0].url")?.ToString(),
                   Name = item["name"].ToString(),
                   Owner = item.SelectToken("owner.display_name").ToString(),
-                  Link = item.SelectToken("tracks.href").ToString()
+                  Link = item.SelectToken("tracks.href").ToString(),
+                  SongsList = new ObservableCollection<Track>()
                 });    
             }
         }
         public void SelectPlaylist(PlaylistItem item)
         {
+            //if already active dont return, else running method will cause bad things to happen
+            if (item.Active) return;
             foreach (PlaylistItem playlistItem in PlaylistItems)
             {
                 playlistItem.Active = false;

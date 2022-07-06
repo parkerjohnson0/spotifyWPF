@@ -3,12 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:spotifyWPF.View.Controls"
              xmlns:vm="clr-namespace:spotifyWPF.ViewModel"
-             xmlns:conv="clr-namespace:spotifyWPF.ViewModel.Converters"
+             xmlns:conv="clr-namespace:spotifyWPF.ViewModel.Converters.Root"
              xmlns:local="clr-namespace:spotifyWPF"
              StartupUri="View/RootWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <conv:ColumnWidthConverter x:Key="ColumnWidthConv"/>
+            <conv:DateConverter x:Key="DateConv" />
+            <conv:ColumnWidthConverter x:Key="ColumnWidthConv" />
+            <SolidColorBrush x:Key="SpotifyHover">#2A2A2A</SolidColorBrush>
             <!-- Fill Brushes -->
             <LinearGradientBrush x:Key="NormalBrush" StartPoint="0,0" EndPoint="0,1">
                 <GradientBrush.GradientStops>
@@ -147,21 +149,21 @@
             <DataTemplate x:Key="PlaylistHeader">
                 <TextBlock>
                     <TextBlock.Text>
-                    <Binding/>
+                        <Binding />
                     </TextBlock.Text>
                 </TextBlock>
-                
+
             </DataTemplate>
             <Style TargetType="GridViewColumnHeader" x:Key="PlaylistGrid">
                 <Setter Property="Foreground" Value="#bbb7ca"></Setter>
-                <Setter Property="HorizontalContentAlignment" Value="Left"/> 
-               <Setter Property="Background" Value="Transparent"/>
-               <Setter Property="BorderBrush" Value="Transparent"/>
-               <Setter Property="BorderThickness" Value="0,0,0,32"/>
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="FontSize" Value="12"></Setter>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <Border BorderBrush="#bbb7ca" BorderThickness="0,0,0,0.25">
+                                <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            </Border>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -319,142 +321,220 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            <DataTemplate x:Key="Playlist" DataType="{x:Type vm:RootVM}">
-                <Grid Background="#121212">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="250"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" >
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="240" />
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Image Width="200" Height="200"
-                                   Margin="10,0"
-                                   Grid.Column="0" VerticalAlignment="Bottom"
-                                   Source="{Binding SelectedPlaylistItem.Image}"></Image>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Bottom"
-                                Margin="10,0,0,0" >
-                                <TextBlock Text="PLAYLIST" 
-                                           Foreground="White" FontFamily="{StaticResource CircularBold}"/>
-                                <TextBlock Foreground="White"  Margin="0,5"
-                                           TextWrapping="Wrap"
-                                           FontSize="32"
-                                           FontFamily="{StaticResource CircularBold}"
-                                    Text="{Binding SelectedPlaylistItem.Name}"/>
-                                <TextBlock Foreground="#bbb7ca" Margin="0,5"
-                                           TextWrapping="Wrap"
-                                           FontSize="16"
-                                           FontFamily="{StaticResource CircularMedium}"
-                                    Text="{Binding SelectedPlaylistItem.Description}"/>
-                                <TextBlock Margin="0,5">
-                                    <Run Text="{Binding SelectedPlaylistItem.Owner}"
-                                         Foreground="White"
-                                         FontFamily="{StaticResource CircularBook}"/>
-                                </TextBlock>
-                            </StackPanel>
+            <DataTemplate x:Key="Playlist" DataType="{x:Type vm:DisplayVM}">
+                <ScrollViewer>
+                    <Grid Background="#121212">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="250" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="240" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Width="200" Height="200"
+                                       Margin="10,0"
+                                       Grid.Column="0" VerticalAlignment="Bottom"
+                                       Source="{Binding SelectedPlaylistItem.Image}">
+                                </Image>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Bottom"
+                                            Margin="10,0,0,0">
+                                    <TextBlock Text="PLAYLIST"
+                                               Foreground="White" FontFamily="{StaticResource CircularBold}" />
+                                    <TextBlock Foreground="White" Margin="0,5"
+                                               TextWrapping="Wrap"
+                                               FontSize="32"
+                                               FontFamily="{StaticResource CircularBold}"
+                                               Text="{Binding SelectedPlaylistItem.Name}" />
+                                    <TextBlock Foreground="#bbb7ca" Margin="0,5"
+                                               TextWrapping="Wrap"
+                                               FontSize="16"
+                                               FontFamily="{StaticResource CircularMedium}"
+                                               Text="{Binding SelectedPlaylistItem.Description}">
+                                        <TextBlock.Style>
+                                            <Style>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding SelectedPlaylistItem.Description}"
+                                                                 Value="">
+                                                        <Setter Property="TextBlock.Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock Margin="0,5">
+                                        <Run Text="{Binding SelectedPlaylistItem.Owner}"
+                                             Foreground="White"
+                                             FontFamily="{StaticResource CircularBook}" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <ListView Background="#121212"
+                                      x:Name="lv"
+                                      Padding="25,0"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                      ScrollViewer.CanContentScroll="False"
+                                      ItemsSource="{Binding SelectedPlaylistItem.SongsList}">
+                                <ListView.View>
+                                    <GridView AllowsColumnReorder="False">
+                                        <GridViewColumn Header="#" Width="50"
+                                                        HeaderTemplate="{StaticResource PlaylistHeader}">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="{x:Type GridViewColumnHeader}">
+                                                    <Setter Property="Foreground" Value="#bbb7ca"></Setter>
+                                                    <Setter Property="FontSize" Value="12"></Setter>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                                                                <Border BorderBrush="#bbb7ca"
+                                                                        BorderThickness="0,0,0,0.25">
+                                                                    <ContentPresenter HorizontalAlignment="Right"
+                                                                        Margin="0,0,15,0"
+                                                                        VerticalAlignment="Center" />
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderBrush="Transparent" BorderThickness="3" Margin="-6,0">
+                                                        <TextBlock TextAlignment="Right" Margin="10,0"
+                                                                   TextTrimming="CharacterEllipsis"
+                                                                   Text="{Binding ListIndex}">
+                                                        </TextBlock>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="TITLE"
+                                                        HeaderContainerStyle="{StaticResource PlaylistGrid}"
+                                                        Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderBrush="Transparent" BorderThickness="3" Margin="-6,0">
+                                                        <Grid Margin="-6,0">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="32" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Image Source="{Binding AlbumArt}" Width="32" Height="32" />
+                                                            <Grid Grid.Column="1" Margin="10,0,0,0">
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition />
+                                                                    <RowDefinition />
+                                                                </Grid.RowDefinitions>
+                                                                <TextBlock Foreground="White" Text="{Binding Title}"
+                                                                           Padding="0,0,25,0"
+                                                                           TextTrimming="CharacterEllipsis">
+                                                                </TextBlock>
+                                                                <TextBlock Grid.Row="1" Text="{Binding Artist}"
+                                                                           TextTrimming="CharacterEllipsis">
+                                                                </TextBlock>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="ALBUM"
+                                                        HeaderContainerStyle="{StaticResource PlaylistGrid}"
+                                                        Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderBrush="Transparent" BorderThickness="3" Margin="-6,0">
+                                                        <TextBlock HorizontalAlignment="Stretch" Margin="-6,0"
+                                                                   TextTrimming="CharacterEllipsis" Padding="0,0,25,0"
+                                                                   VerticalAlignment="Stretch" Text="{Binding Album}">
+                                                        </TextBlock>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="DATE ADDED"
+                                                        HeaderContainerStyle="{StaticResource PlaylistGrid}"
+                                                        Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderBrush="Transparent" BorderThickness="3" Margin="-6,0">
+                                                        <TextBlock
+                                                            Text="{Binding DateAdded, Converter={StaticResource DateConv}}"
+                                                            Margin="-6,0" TextTrimming="CharacterEllipsis">
+                                                        </TextBlock>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="🕒"
+                                                        HeaderContainerStyle="{StaticResource PlaylistGrid}"
+                                                        Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderBrush="Transparent" BorderThickness="3" Margin="-6,0">
+                                                        <TextBlock Text="{Binding Duration}" Margin="-6,0"
+                                                                   TextTrimming="CharacterEllipsis">
+                                                        </TextBlock>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ListViewItem}">
+                                        <Setter Property="Foreground" Value="LightGray" />
+                                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                    <Grid x:Name="PlaylistRow">
+                                                        <GridViewRowPresenter
+                                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                            Width="Auto" Margin="0"
+                                                            Content="{TemplateBinding Content}">
+                                                        </GridViewRowPresenter>
+                                                    </Grid>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="PlaylistRow" Property="Background"
+                                                                    Value="{StaticResource SpotifyHover}" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
                         </Grid>
                     </Grid>
-                    <Grid Grid.Row="1" >
-                     <ListView Background="#121212"
-                               x:Name="lv"
-                               Padding="25,0"
-                               BorderThickness="0"
-                               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                               ItemsSource="{Binding SelectedPlaylistItem.SongsList}">
-                         <ListView.View>
-                             <GridView AllowsColumnReorder="False">
-                                 <GridViewColumn Header="#" Width="25" HeaderTemplate="{StaticResource PlaylistHeader}"
-                                                 HeaderContainerStyle="{StaticResource PlaylistGrid}">
-                                     <GridViewColumn.CellTemplate>
-                                         <DataTemplate>
-                                            <TextBlock Text="{Binding ListIndex}" ></TextBlock>
-                                        </DataTemplate> 
-                                     </GridViewColumn.CellTemplate>
-                                 </GridViewColumn>
-                                 <GridViewColumn Header="TITLE" HeaderContainerStyle="{StaticResource PlaylistGrid}"
-                                                 Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
-                                     <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                               <Image Source="{Binding AlbumArt}" Width="32" Height="32"/> 
-                                            <StackPanel>
-                                                <TextBlock Text="{Binding Title}" ></TextBlock>
-                                                <TextBlock Text="{Binding Artist}" ></TextBlock>
-                                            </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate> 
-                                     </GridViewColumn.CellTemplate>
-                                 </GridViewColumn>
-                                 <GridViewColumn Header="ALBUM" HeaderContainerStyle="{StaticResource PlaylistGrid}"
-                                                 Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
-                                     <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                                    <TextBlock Text="{Binding Album}" ></TextBlock>
-                                        </DataTemplate> 
-                                     </GridViewColumn.CellTemplate>
-                                 </GridViewColumn>
-                                 <GridViewColumn Header="DATE ADDED" HeaderContainerStyle="{StaticResource PlaylistGrid}"
-                                                 Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
-                                     <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                                    <TextBlock Text="{Binding DateAdded}" ></TextBlock>
-                                        </DataTemplate> 
-                                     </GridViewColumn.CellTemplate>
-                                 </GridViewColumn>
-                                 <GridViewColumn Header="🕒" HeaderContainerStyle="{StaticResource PlaylistGrid}"
-                                                 Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
-                                     <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                                    <TextBlock Text="{Binding Duration}" ></TextBlock>
-                                        </DataTemplate> 
-                                     </GridViewColumn.CellTemplate>
-                                 </GridViewColumn>
-                             </GridView>
-                         </ListView.View>
-                         <ListView.ItemContainerStyle>
-                            <Style TargetType="{x:Type ListViewItem}">
-                                <Setter Property="Foreground" Value="LightGray"/>  
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                            <Border BorderBrush="Transparent">
-                                                <StackPanel>
-                                                    <GridViewRowPresenter HorizontalAlignment="Stretch"
-                                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                                          Width="Auto" Margin="0"
-                                                                          Content="{TemplateBinding Content}" />
-
-                                                </StackPanel>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                
-                            </Style>
-                        </ListView.ItemContainerStyle>     
-                     </ListView>   
-                    </Grid>
-                </Grid>
+                </ScrollViewer>
             </DataTemplate>
-            <DataTemplate x:Key="Home" DataType="{x:Type vm:RootVM}">
+            <DataTemplate x:Key="Home" DataType="{x:Type vm:DisplayVM}">
                 <Grid Background="#121212">
                 </Grid>
             </DataTemplate>
-            <DataTemplate x:Key="Loading" DataType="{x:Type vm:RootVM}">
+            <DataTemplate x:Key="Loading" DataType="{x:Type vm:DisplayVM}">
                 <Grid Background="#121212">
                     <TextBlock Foreground="DarkGray" Text="Loading" />
                 </Grid>
             </DataTemplate>
-            <DataTemplate x:Key="Search" DataType="{x:Type vm:RootVM}">
+            <DataTemplate x:Key="Search" DataType="{x:Type vm:DisplayVM}">
                 <Grid Background="#121212">
                     <TextBlock Foreground="DarkGray" Text="Search" />
                 </Grid>
             </DataTemplate>
-            <DataTemplate x:Key="Library" DataType="{x:Type vm:RootVM}">
+            <DataTemplate x:Key="Library" DataType="{x:Type vm:DisplayVM}">
                 <Grid Background="#121212">
                     <TextBlock Foreground="DarkGray" Text="Library" />
                 </Grid>
