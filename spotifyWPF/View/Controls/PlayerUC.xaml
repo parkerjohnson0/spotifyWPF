@@ -3,15 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:spotifyWPF.ViewModel"
+             xmlns:conv="clr-namespace:spotifyWPF.ViewModel.Converters.Player"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:spotifyWPF.View.Controls"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
-    
+             d:DesignHeight="90" d:DesignWidth="1000">
+
     <UserControl.DataContext>
-        <vm:PlayerVM/>
+        <vm:PlayerVM />
     </UserControl.DataContext>
     <UserControl.Resources>
+        <conv:SliderCircleConverter x:Key="SliderCircleConv" />
         <Style TargetType="{x:Type Grid}" x:Key="playButtonGridHover">
             <Setter Property="Height" Value="32" />
             <Setter Property="Width" Value="32" />
@@ -34,8 +36,13 @@
         </Style>
     </UserControl.Resources>
 
-    <Border  Background="#181818">
-        <Grid >
+    <Border Background="#181818">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
@@ -44,7 +51,7 @@
             </Grid.RowDefinitions>
             <Grid.Style>
                 <Style TargetType="{x:Type Grid}">
-                    <Setter Property="Background" Value="#181818"/>
+                    <Setter Property="Background" Value="#181818" />
                     <Setter Property="Effect">
                         <Setter.Value>
                             <BlurEffect Radius="5"></BlurEffect>
@@ -62,7 +69,7 @@
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
-            <Grid Style="{StaticResource playButtonGridHover}"
+            <Grid Grid.Column="1" Style="{StaticResource playButtonGridHover}"
                   Grid.RowSpan="3">
                 <Ellipse Style="{StaticResource playButtonEllipseHover}" />
                 <Image
@@ -70,6 +77,75 @@
                     Height="18" Width="18">
                 </Image>
             </Grid>
+            <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2"
+                        HorizontalAlignment="Right" Margin="0,0,50,0">
+                <Image Source="/View/Resources/Icons/devices_unclicked.png"
+                       Height="20" Width="20" Margin="5" />
+                <Image Source="/View/Resources/Icons/speaker_unclicked.png"
+                       Height="20" Width="20" Margin="5" />
+                <RepeatButton  Delay="100" Interval="100">
+                    <RepeatButton.Style>
+                        <Style TargetType="{x:Type RepeatButton}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <Border BorderBrush="Transparent" BorderThickness="3" Background="Transparent"
+                                                Height="25">
+                                            <Grid>
+                                                <Rectangle Height="5" Width="100" Fill="#5e5e5e" RadiusX="2"
+                                                           RadiusY="2"
+                                                           x:Name="PlaylistBar"
+                                                           Margin="5">
+                                                </Rectangle>
+                                                <Rectangle Height="5" Width="{Binding Volume}"
+                                                           HorizontalAlignment="Left" RadiusX="2"
+                                                           RadiusY="2"
+                                                           Margin="5">
+                                                    <Rectangle.Style>
+                                                        <Style TargetType="{x:Type Rectangle}">
+                                                            <Setter Property="Fill" Value="White"></Setter>
+                                                            <Style.Triggers>
+                                                                <DataTrigger
+                                                                    Binding="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                                    AncestorType={x:Type Border}},Path=IsMouseOver}"
+                                                                    Value="True">
+                                                                    <Setter Property="Fill" Value="#1db954" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Rectangle.Style>
+                                                </Rectangle>
+                                                <Ellipse Height="10" Width="10" Fill="White" HorizontalAlignment="Left"
+                                                         Margin="{Binding Volume, Converter={StaticResource SliderCircleConv}}">
+                                                    <Ellipse.Style>
+                                                        <Style TargetType="{x:Type Ellipse}">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger
+                                                                    Binding="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                        AncestorType={x:Type Border}},Path=IsMouseOver}"
+                                                                    Value="True">
+                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Ellipse.Style>
+                                                </Ellipse>
+                                            </Grid>
+                                            <Border.InputBindings>
+                                                <MouseBinding MouseAction="LeftClick"
+                                                              CommandParameter="{Binding ElementName=PlaylistBar}"
+                                                              Command="{Binding VolumeSliderCommand}" />
+                                            </Border.InputBindings>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </RepeatButton.Style>
+
+                </RepeatButton>
+            </StackPanel>
 
         </Grid>
     </Border>

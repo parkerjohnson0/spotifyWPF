@@ -93,6 +93,23 @@
       <Content Include="View\Resources\Icons\search_unclicked_alt.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <None Remove="View\Resources\Icons\devices_clicked.png" />
+      <None Remove="View\Resources\Icons\devices_unclicked.png" />
+      <Content Include="View\Resources\Icons\devices_unclicked.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\devices_unclicked_alt.png" />
+      <Content Include="View\Resources\Icons\devices_unclicked_alt.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\speaker_unclicked.png" />
+      <Content Include="View\Resources\Icons\speaker_unclicked.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\speaker_unclicked_alt.png" />
+      <Content Include="View\Resources\Icons\speaker_unclicked_alt.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>

@@ -33,6 +33,10 @@ disable interaction with UI until authorized
 use pkce auth flow. so that way token can be stored for longer. otherwise would have to refresh token every hour if access token not replace with refresh token. 
 
 long term
+    add caching to api calls dont have to be made to playlists all the time
+        how to check if can use cached version or have to make api call?
+    set max length to gridsplitter 
+    make custom listview that will load data as needed as opposed to all at once (lol)
     create fake gridsplitter. make width 10px, but transparent. change border of hovered panel to emulate look. emulate real spotify thing
 	store a certain amout of playlists so api doesnt have to be called too much
 	save to file. startup roottemplate should be last selected

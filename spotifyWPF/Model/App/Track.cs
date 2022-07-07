@@ -1,11 +1,20 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace spotifyWPF.Model.App;
 
-public class Track 
+public class Track  : INotifyPropertyChanged
 {
    public string Title { get; set; } 
    public string Artist { get; set; }
+   private bool _active;
+
+   public bool Active
+   {
+      get { return _active;}
+      set { _active = value; NotifyPropertyChanged(); }
+   }
    public string Album { get; set; }
    public string AlbumArt { get; set; }
    public long DurationMS { get; set; }
@@ -25,4 +34,10 @@ public class Track
    }
    public DateTime DateAdded { get; set; }
    public int ListIndex { get; set; }
+   public event PropertyChangedEventHandler? PropertyChanged;
+
+   protected virtual void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
+   {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+   }
 }

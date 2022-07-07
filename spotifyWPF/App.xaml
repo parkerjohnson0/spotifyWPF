@@ -154,6 +154,10 @@
                 </TextBlock>
 
             </DataTemplate>
+            <Style TargetType="TextBlock" x:Key="PlaylistTextFocus">
+                <Style.Triggers>
+                </Style.Triggers>
+            </Style>
             <Style TargetType="GridViewColumnHeader" x:Key="PlaylistGrid">
                 <Setter Property="Foreground" Value="#bbb7ca"></Setter>
                 <Setter Property="Background" Value="Transparent" />
@@ -322,7 +326,7 @@
                 </Style.Triggers>
             </Style>
             <DataTemplate x:Key="Playlist" DataType="{x:Type vm:DisplayVM}">
-                <ScrollViewer>
+                <ScrollViewer Background="#121212">
                     <Grid Background="#121212">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="250" />
@@ -372,17 +376,24 @@
                                 </StackPanel>
                             </Grid>
                         </Grid>
-                        <Grid Grid.Row="1">
-                            <ListView Background="#121212"
-                                      x:Name="lv"
-                                      Padding="25,0"
-                                      BorderThickness="0"
-                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                                      ScrollViewer.CanContentScroll="False"
-                                      ItemsSource="{Binding SelectedPlaylistItem.SongsList}">
+                        <Grid Grid.Row="1" Margin="0,20">
+                            <ListView
+                                x:Name="lv"
+                                Padding="25,0"
+                                BorderThickness="0"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                ScrollViewer.CanContentScroll="False"
+                                PreviewMouseWheel="Lv_OnPreviewMouseWheel"
+                                ItemsSource="{Binding SelectedPlaylistItem.SongsList}">
+                                <ListView.Style>
+                                    <Style TargetType="{x:Type ListView}">
+                                        <Setter Property="Background" Value="#121212"></Setter>
+                                    </Style>
+                                </ListView.Style>
                                 <ListView.View>
-                                    <GridView AllowsColumnReorder="False">
+                                    <GridView AllowsColumnReorder="False" x:Name="ListGrid">
+
                                         <GridViewColumn Header="#" Width="50"
                                                         HeaderTemplate="{StaticResource PlaylistHeader}">
                                             <GridViewColumn.HeaderContainerStyle>
@@ -437,6 +448,24 @@
                                                                 </TextBlock>
                                                                 <TextBlock Grid.Row="1" Text="{Binding Artist}"
                                                                            TextTrimming="CharacterEllipsis">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="{x:Type TextBlock}">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger
+                                                                                    Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}},Path=IsMouseOver}"
+                                                                                    Value="True">
+                                                                                    <Setter Property="Foreground"
+                                                                                        Value="White" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding Active}"
+                                                                                    Value="True">
+                                                                                    <Setter
+                                                                                        Property="Foreground"
+                                                                                        Value="White" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
                                                                 </TextBlock>
                                                             </Grid>
                                                         </Grid>
@@ -451,8 +480,25 @@
                                                 <DataTemplate>
                                                     <Border BorderBrush="Transparent" BorderThickness="3" Margin="-6,0">
                                                         <TextBlock HorizontalAlignment="Stretch" Margin="-6,0"
+                                                                   x:Name="AlbumText"
                                                                    TextTrimming="CharacterEllipsis" Padding="0,0,25,0"
                                                                    VerticalAlignment="Stretch" Text="{Binding Album}">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="{x:Type TextBlock}">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger
+                                                                            Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}},Path=IsMouseOver}"
+                                                                            Value="True">
+                                                                            <Setter Property="Foreground" Value="White" />
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Active}"
+                                                                            Value="True">
+                                                                            <Setter
+                                                                                Property="Foreground" Value="White" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
                                                         </TextBlock>
                                                     </Border>
                                                 </DataTemplate>
@@ -503,12 +549,30 @@
                                                             Width="Auto" Margin="0"
                                                             Content="{TemplateBinding Content}">
                                                         </GridViewRowPresenter>
+                                                        <Grid.InputBindings>
+                                                            <MouseBinding MouseAction="LeftClick"
+                                                                          Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                            AncestorType={x:Type UserControl }},Path=DataContext.SelectTrackCommand}"
+                                                                          CommandParameter="{Binding .}">
+
+                                                            </MouseBinding>
+                                                        </Grid.InputBindings>
                                                     </Grid>
                                                     <ControlTemplate.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding Active}" Value="False" />
+                                                                <Condition
+                                                                    Binding="{Binding RelativeSource={RelativeSource Self},Path=IsMouseOver}"
+                                                                    Value="True" />
+                                                            </MultiDataTrigger.Conditions>
                                                             <Setter TargetName="PlaylistRow" Property="Background"
                                                                     Value="{StaticResource SpotifyHover}" />
-                                                        </Trigger>
+                                                        </MultiDataTrigger>
+                                                        <DataTrigger Binding="{Binding Active}" Value="True">
+                                                            <Setter TargetName="PlaylistRow" Property="Background"
+                                                                    Value="#5a5a5a" />
+                                                        </DataTrigger>
                                                     </ControlTemplate.Triggers>
                                                 </ControlTemplate>
                                             </Setter.Value>

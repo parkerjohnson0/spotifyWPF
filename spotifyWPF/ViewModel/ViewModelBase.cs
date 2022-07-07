@@ -20,41 +20,47 @@ namespace spotifyWPF.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         private static HttpClient _httpClient = new HttpClient();
-        public static HttpClient HttpClient 
+
+        public static HttpClient HttpClient
         {
             get { return _httpClient; }
             set { _httpClient = value; }
-
         }
+
         private static AppState _appState = new AppState();
+
         public static AppState AppState
         {
             get { return _appState; }
-            set
-            {
-                _appState = value;
-            }
+            set { _appState = value; }
         }
 
         public ViewModelBase()
         {
         }
     }
+
     //todo create authorized event that will trigger data fetching in view models?
-    public class AppState  : INotifyPropertyChanged
+    public class AppState : INotifyPropertyChanged
     {
         public event EventHandler OnAuthorized;
         public event EventHandler OnPlaylistDataUpdated;
 
-        private RootTemplate _rootTemplate = RootTemplate.Playlist;
+        private RootTemplate _rootTemplate = RootTemplate.Loading;
+
         /// <summary>
         /// Swaps out data templates used for display in RootUC when set
         /// </summary>
         public RootTemplate RootTemplate
         {
-            get{ return _rootTemplate; }
-            set { _rootTemplate = value; NotifyPropertyChanged(); }
+            get { return _rootTemplate; }
+            set
+            {
+                _rootTemplate = value;
+                NotifyPropertyChanged();
+            }
         }
 
         private bool _authorized;
@@ -65,11 +71,23 @@ namespace spotifyWPF.ViewModel
             set
             {
                 _authorized = value;
-                 NotifyPropertyChanged();
-                 if (_authorized)
-                 {
-                     OnAuthorized?.Invoke(this, EventArgs.Empty);
-                 }
+                NotifyPropertyChanged();
+                if (_authorized)
+                {
+                    OnAuthorized?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        private Track _selectedTrack;
+
+        public Track SelectedTrack
+        {
+            get { return _selectedTrack; }
+            set
+            {
+                _selectedTrack = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -85,9 +103,11 @@ namespace spotifyWPF.ViewModel
                 {
                     OnPlaylistDataUpdated(this, EventArgs.Empty);
                 }
+
                 NotifyPropertyChanged();
             }
         }
+
         private string _accessToken;
 
         public string AccessToken
@@ -99,11 +119,14 @@ namespace spotifyWPF.ViewModel
                 NotifyPropertyChanged();
             }
         }
-         public event PropertyChangedEventHandler? PropertyChanged;
 
-         private void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
-         {
-             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-         }
+        public int Volume { get; set; }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

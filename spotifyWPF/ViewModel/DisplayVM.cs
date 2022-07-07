@@ -7,10 +7,12 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media.Effects;
 using Newtonsoft.Json.Linq;
-using spotifyWPF.Model.App;
 using spotifyWPF.Model.Nav;
+using spotifyWPF.ViewModel.Commands;
+using Track = spotifyWPF.Model.App.Track;
 
 namespace spotifyWPF.ViewModel
 {
@@ -24,6 +26,13 @@ namespace spotifyWPF.ViewModel
             set { _winBlur = value; }
         }
 
+        private Track _selectedTrack;
+        public Track SelectedTrack
+        {
+            get { return _selectedTrack; }
+            set { _selectedTrack = value; NotifyPropertyChanged(); }
+        }
+        
         private PlaylistItem _selectedPlaylistItem = new PlaylistItem()
         {
             Active = true,
@@ -46,9 +55,10 @@ namespace spotifyWPF.ViewModel
                 NotifyPropertyChanged();
             }
         }
-
+        public SelectTrackCommand SelectTrackCommand { get; set; }
         public DisplayVM()
         {
+            SelectTrackCommand = new SelectTrackCommand(this);
             AppState.OnAuthorized += RootVMAuthorized;
             AppState.OnPlaylistDataUpdated += SelectedPlaylistItemChanged;
         }
@@ -85,6 +95,11 @@ namespace spotifyWPF.ViewModel
                    DurationMS = (long) item.SelectToken("track.duration_ms")
                 });
             }
+        }
+
+        private void PlaylistScrolled(ScrollEventArgs e, object sender)
+        {
+            
         }
     }
 }
