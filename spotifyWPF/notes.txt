@@ -22,9 +22,12 @@ why is overriding the default scrollbar style so ridiculously annoying
 	have to copy paste 150 lines from the default template. 
     
 after a few days I have confirmed my biases against stackoverflow's dogmatic mvvm nerds
-
+bugs that are quite worth trying to fix yet
+    volume slider grows if dragged to 100
 todo
 selecting playlist should deselect other home/lib/search and vice versa
+some characters are showing as unicode
+    HttpUtility.HtmlDecode from a quick google maybe?
 clean up some stuff from rootvm
 give each vm authorized property which returns from static app.authorized
 	not quite ready to work yet. property wont update 
@@ -33,6 +36,7 @@ disable interaction with UI until authorized
 use pkce auth flow. so that way token can be stored for longer. otherwise would have to refresh token every hour if access token not replace with refresh token. 
 
 long term
+    make each segment of playeruc into its own control
     add caching to api calls dont have to be made to playlists all the time
         how to check if can use cached version or have to make api call?
     set max length to gridsplitter 

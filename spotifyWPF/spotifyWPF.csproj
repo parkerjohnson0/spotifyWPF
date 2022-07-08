@@ -110,6 +110,14 @@
       <Content Include="View\Resources\Icons\speaker_unclicked_alt.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+      <None Remove="View\Resources\Icons\speaker_clicked.png" />
+      <Content Include="View\Resources\Icons\speaker_clicked.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\speaker_clicked_alt.png" />
+      <Content Include="View\Resources\Icons\speaker_clicked_alt.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>

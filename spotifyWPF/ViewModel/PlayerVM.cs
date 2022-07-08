@@ -1,12 +1,33 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using spotifyWPF.Model.Player;
 using spotifyWPF.ViewModel.Commands;
 
 namespace spotifyWPF.ViewModel;
 
 public class PlayerVM : ViewModelBase
 {
+    private string _getDevicesUrl = "https://api.spotify.com/v1/me/player/devices";
     public VolumeSliderCommand VolumeSliderCommand { get; set; }
+    private bool _isMuted;
+
+    public bool IsMuted
+    {
+        get { return _isMuted; }
+        set { _isMuted = value; NotifyPropertyChanged();}
+    }
+    private int _lastVolume;
     private int _volume = 50;
+
+
+    public ObservableCollection<Device> Devices { get; set; } = new ObservableCollection<Device>();
+
     public int Volume
     {
         get { return _volume; }
@@ -17,19 +38,50 @@ public class PlayerVM : ViewModelBase
             NotifyPropertyChanged();
         }
     }
+
+    public MuteVolumeCommand MuteVolumeCommand { get; set; }
+
     public PlayerVM()
     {
+        MuteVolumeCommand = new MuteVolumeCommand(this);
         VolumeSliderCommand = new VolumeSliderCommand(this);
         AppState.OnAuthorized += PlayerVMAuthorized;
-
     }
 
-    private void PlayerVMAuthorized(object? sender, EventArgs e)
+    private async void PlayerVMAuthorized(object? sender, EventArgs e)
     {
+        await GetDevices();
+    }
+
+    private async Task GetDevices()
+    {
+        HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, _getDevicesUrl);
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AppState.AccessToken);
+        HttpResponseMessage resp = await HttpClient.SendAsync(req);
+        JObject obj = JObject.Parse(resp.Content.ReadAsStringAsync().Result);
+        foreach (JToken token in obj["devices"])
+        {
+            Device device = JsonSerializer.Deserialize<Device>(token.ToString());
+            Devices.Add(device);
+        }
     }
 
     public void SetVolume(int volume)
     {
-        Volume = volume;
+        if (IsMuted)
+        {
+            IsMuted = false;
+            Volume = volume == 0 ? _lastVolume : volume;
+        }
+        else if (volume == 0)
+        {
+            _lastVolume = Volume;
+            IsMuted = true;
+            Volume = volume;
+        }
+        else
+        {
+            Volume = volume;
+        }
     }
 }
