@@ -11,8 +11,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1280" >
     <i:Interaction.Triggers>
-       <i:EventTrigger EventName="MouseLeftButtonUp">
-           <i:InvokeCommandAction Command="{Binding MouseUpCommand}"/>
+       <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+           <i:InvokeCommandAction Command="{Binding MouseUpCommand}"
+                                  PassEventArgsToCommand="True"
+                                  />
        </i:EventTrigger> 
     </i:Interaction.Triggers>
     <Window.DataContext>

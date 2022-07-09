@@ -92,12 +92,14 @@
                             </Style.Triggers>
                         </Style>
                     </Image.Style>
-                    <Image.InputBindings>
-                        <MouseBinding MouseAction="LeftClick" Command="{Binding ToggleDeviceControlCommand}" 
-                                      CommandParameter="{Binding .}">
-                            
-                        </MouseBinding>
-                    </Image.InputBindings>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding ToggleDeviceControlCommand}"
+                                                   CommandParameter="{Binding AppState.DeviceControlVisibility}">
+                                
+                            </i:InvokeCommandAction>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                 </Image>
                 <Image
                     Height="20" Width="20" Margin="5">
@@ -116,8 +118,9 @@
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
                                         <Condition Binding="{Binding IsMuted}" Value="True" />
-                                        <Condition Binding="{Binding RelativeSource={RelativeSource Self},Path=IsMouseOver}"
-                                                   Value="True" />
+                                        <Condition
+                                            Binding="{Binding RelativeSource={RelativeSource Self},Path=IsMouseOver}"
+                                            Value="True" />
                                     </MultiDataTrigger.Conditions>
                                     <MultiDataTrigger.Setters>
                                         <Setter Property="Source" Value="/View/Resources/Icons/speaker_clicked_alt.png" />

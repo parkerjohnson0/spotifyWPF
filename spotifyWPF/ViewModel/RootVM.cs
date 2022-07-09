@@ -13,9 +13,10 @@ public class RootVM : ViewModelBase
         MouseUpCommand = new MouseUpCommand(this);
     }
 
-    public void MouseUp()
+    public void MouseUp(MouseButtonEventArgs? e)
     {
-        if (Mouse.DirectlyOver is not DevicesUC)
+        //Point point = e.GetPosition((IInputElement)e.OriginalSource);
+        if (Mouse.DirectlyOver is not DevicesVM)
         {
             AppState.DeviceControlVisibility = Visibility.Collapsed;
         }

@@ -37,6 +37,7 @@ disable interaction with UI until authorized
 use pkce auth flow. so that way token can be stored for longer. otherwise would have to refresh token every hour if access token not replace with refresh token. 
 
 long term
+    use interactions instead of mousebindings. for more C O N T R O L 
     make each segment of playeruc into its own control
     add caching to api calls dont have to be made to playlists all the time
         how to check if can use cached version or have to make api call?

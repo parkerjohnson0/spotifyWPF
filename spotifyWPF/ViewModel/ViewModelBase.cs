@@ -67,7 +67,7 @@ namespace spotifyWPF.ViewModel
 
         private Visibility _deviceControlVisibility = Visibility.Collapsed;
 
-        public Visibility DeviceControlVisibility 
+        public Visibility DeviceControlVisibility
         {
             get { return _deviceControlVisibility; }
             set
@@ -77,6 +77,7 @@ namespace spotifyWPF.ViewModel
                 OnDeviceControlClicked?.Invoke(this, EventArgs.Empty);
             }
         }
+
         private bool _authorized;
 
         public bool Authorized

@@ -13,12 +13,12 @@ public class MouseUpCommand : ICommand
     }
     public bool CanExecute(object? parameter)
     {
-        return _vm.AppState.DeviceControlVisibility == Visibility.Visible ? true : false;
+        return _vm.AppState.DeviceControlVisibility == Visibility.Visible;
     }
 
     public void Execute(object? parameter)
     {
-        _vm.MouseUp();
+        _vm.MouseUp(parameter as MouseButtonEventArgs);
     }
 
     public event EventHandler? CanExecuteChanged;

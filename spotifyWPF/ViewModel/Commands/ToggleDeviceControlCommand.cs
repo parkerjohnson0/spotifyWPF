@@ -17,12 +17,13 @@ public class ToggleDeviceControlCommand : ICommand
     }
     public bool CanExecute(object? parameter)
     {
-        return true;
+        return _vm.AppState.DeviceControlVisibility == Visibility.Collapsed;
     }
 
-    public void Execute(object? parameter)
+    public void Execute(object? visibilityState)
     {
-        _vm.ToggleDeviceWindowVisibility();
+        if (visibilityState == null) return;
+        _vm.ToggleDeviceWindowVisibility((Visibility) visibilityState);
         //WindowService win = new WindowService();
         //if (_controlShowing)
         //{
