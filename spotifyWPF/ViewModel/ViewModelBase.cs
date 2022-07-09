@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using spotifyWPF.Model.App;
 using spotifyWPF.Model.Nav;
 
@@ -31,7 +32,7 @@ namespace spotifyWPF.ViewModel
 
         private static AppState _appState = new AppState();
 
-        public static AppState AppState
+        public AppState AppState
         {
             get { return _appState; }
             set { _appState = value; }
@@ -47,6 +48,7 @@ namespace spotifyWPF.ViewModel
     {
         public event EventHandler OnAuthorized;
         public event EventHandler OnPlaylistDataUpdated;
+        public event EventHandler OnDeviceControlClicked;
 
         private RootTemplate _rootTemplate = RootTemplate.Loading;
 
@@ -63,6 +65,18 @@ namespace spotifyWPF.ViewModel
             }
         }
 
+        private Visibility _deviceControlVisibility = Visibility.Collapsed;
+
+        public Visibility DeviceControlVisibility 
+        {
+            get { return _deviceControlVisibility; }
+            set
+            {
+                _deviceControlVisibility = value;
+                NotifyPropertyChanged();
+                OnDeviceControlClicked?.Invoke(this, EventArgs.Empty);
+            }
+        }
         private bool _authorized;
 
         public bool Authorized

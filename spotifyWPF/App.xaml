@@ -4,10 +4,14 @@
              xmlns:controls="clr-namespace:spotifyWPF.View.Controls"
              xmlns:vm="clr-namespace:spotifyWPF.ViewModel"
              xmlns:conv="clr-namespace:spotifyWPF.ViewModel.Converters.Root"
+             xmlns:view="clr-namespace:spotifyWPF.View.Controls"
              xmlns:local="clr-namespace:spotifyWPF"
              StartupUri="View/RootWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <DataTemplate DataType="{x:Type vm:DevicesVM}">
+                <view:DevicesUC />
+            </DataTemplate>
             <conv:DateConverter x:Key="DateConv" />
             <conv:ColumnWidthConverter x:Key="ColumnWidthConv" />
             <SolidColorBrush x:Key="SpotifyHover">#2A2A2A</SolidColorBrush>

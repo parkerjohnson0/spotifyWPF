@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Windows;
 using Newtonsoft.Json.Linq;
 using spotifyWPF.Model.Player;
 using spotifyWPF.ViewModel.Commands;
@@ -25,7 +26,7 @@ public class PlayerVM : ViewModelBase
     private int _lastVolume;
     private int _volume = 50;
 
-
+    public ToggleDeviceControlCommand  ToggleDeviceControlCommand{ get; set; }
     public ObservableCollection<Device> Devices { get; set; } = new ObservableCollection<Device>();
 
     public int Volume
@@ -43,6 +44,7 @@ public class PlayerVM : ViewModelBase
 
     public PlayerVM()
     {
+        ToggleDeviceControlCommand = new ToggleDeviceControlCommand(this);
         MuteVolumeCommand = new MuteVolumeCommand(this);
         VolumeSliderCommand = new VolumeSliderCommand(this);
         AppState.OnAuthorized += PlayerVMAuthorized;
@@ -83,5 +85,10 @@ public class PlayerVM : ViewModelBase
         {
             Volume = volume;
         }
+    }
+
+    public void ToggleDeviceWindowVisibility()
+    {
+        AppState.DeviceControlVisibility = AppState.DeviceControlVisibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
     }
 }

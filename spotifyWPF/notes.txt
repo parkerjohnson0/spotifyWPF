@@ -30,6 +30,7 @@ some characters are showing as unicode
     HttpUtility.HtmlDecode from a quick google maybe?
 clean up some stuff from rootvm
 give each vm authorized property which returns from static app.authorized
+add authorization to each control that should be blurred and disabled before auth 
 	not quite ready to work yet. property wont update 
 make auth blur look better. add vignette to background
 disable interaction with UI until authorized
@@ -50,3 +51,8 @@ long term
 COMPLETED
     ROOTVM GETTING MADE TWICE SO UPDATE EVENTS TRIGGERING TOO MUCH
     SOLUTION: PROBABLY CHANGE ROOTWINDOW TO USE ITS OWNVM
+
+THINGS I DONT LIKE
+    VMs passing data through appstate feels a little funky
+    The way the device control is being closed when focus lost is very funky. is being faked by manually checking if mouse has been clicked outside of control 
+    

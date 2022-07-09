@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:spotifyWPF.ViewModel"
              xmlns:conv="clr-namespace:spotifyWPF.ViewModel.Converters.Player"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:spotifyWPF.View.Controls"
              mc:Ignorable="d"
@@ -91,23 +92,31 @@
                             </Style.Triggers>
                         </Style>
                     </Image.Style>
+                    <Image.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding ToggleDeviceControlCommand}" 
+                                      CommandParameter="{Binding .}">
+                            
+                        </MouseBinding>
+                    </Image.InputBindings>
                 </Image>
                 <Image
                     Height="20" Width="20" Margin="5">
                     <Image.Style>
                         <Style TargetType="{x:Type Image}">
-                            <Setter Property="Source" Value="/View/Resources/Icons/speaker_unclicked.png" />
                             <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Source" Value="/View/Resources/Icons/speaker_unclicked_alt.png" />
-                                </Trigger>
+                                <DataTrigger Binding="{Binding IsMuted}" Value="False">
+                                    <Setter Property="Source" Value="/View/Resources/Icons/speaker_unclicked.png" />
+                                </DataTrigger>
                                 <DataTrigger Binding="{Binding IsMuted}" Value="True">
                                     <Setter Property="Source" Value="/View/Resources/Icons/speaker_clicked.png" />
                                 </DataTrigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Source" Value="/View/Resources/Icons/speaker_unclicked_alt.png" />
+                                </Trigger>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
                                         <Condition Binding="{Binding IsMuted}" Value="True" />
-                                        <Condition Binding="{Binding RelativeSource={RelativeSource Self}}"
+                                        <Condition Binding="{Binding RelativeSource={RelativeSource Self},Path=IsMouseOver}"
                                                    Value="True" />
                                     </MultiDataTrigger.Conditions>
                                     <MultiDataTrigger.Setters>
