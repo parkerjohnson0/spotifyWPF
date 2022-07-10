@@ -19,7 +19,6 @@
     </i:Interaction.Triggers>
     <Window.DataContext>
         <vm:RootVM />
-
     </Window.DataContext>
     <Window.Resources>
 
@@ -65,7 +64,9 @@
                 </Style>
             </controls:AuthUC.Style>
         </controls:AuthUC>
-        <controls:DevicesUC Margin="0,0,70,100"
+        <controls:DevicesUC 
+                            Margin="0,0,70,100"
+                            DataContext="{Binding DevicesVm}"
                             VerticalAlignment="Bottom"
                             HorizontalAlignment="Right" />
     </Grid>

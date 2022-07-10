@@ -89,6 +89,6 @@ public class PlayerVM : ViewModelBase
 
     public void ToggleDeviceWindowVisibility(Visibility state)
     {
-        AppState.DeviceControlVisibility = state == Visibility.Collapsed ? Visibility.Visible : state;
+        AppState.DeviceControlVisibility = state == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
     }
 }

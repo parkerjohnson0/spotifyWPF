@@ -49,6 +49,7 @@ namespace spotifyWPF.ViewModel
         public event EventHandler OnAuthorized;
         public event EventHandler OnPlaylistDataUpdated;
         public event EventHandler OnDeviceControlClicked;
+        public event EventHandler OnDeviceControlUnfocused;
 
         private RootTemplate _rootTemplate = RootTemplate.Loading;
 
@@ -65,6 +66,7 @@ namespace spotifyWPF.ViewModel
             }
         }
 
+        public bool? DeviceControlIsFocused { get; set; } = null;
         private Visibility _deviceControlVisibility = Visibility.Collapsed;
 
         public Visibility DeviceControlVisibility
@@ -75,6 +77,8 @@ namespace spotifyWPF.ViewModel
                 _deviceControlVisibility = value;
                 NotifyPropertyChanged();
                 OnDeviceControlClicked?.Invoke(this, EventArgs.Empty);
+                DeviceControlIsFocused = true;
+
             }
         }
 
@@ -134,7 +138,13 @@ namespace spotifyWPF.ViewModel
                 NotifyPropertyChanged();
             }
         }
-
+        public void DeviceControlUnfocused()
+        {
+            _deviceControlVisibility = Visibility.Collapsed;
+            OnDeviceControlUnfocused?.Invoke(this, EventArgs.Empty);
+            NotifyPropertyChanged(nameof(DeviceControlVisibility));
+            DeviceControlIsFocused = false;
+        }
         public int Volume { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -143,5 +153,6 @@ namespace spotifyWPF.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
     }
 }
