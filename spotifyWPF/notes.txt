@@ -25,6 +25,7 @@ after a few days I have confirmed my biases against stackoverflow's dogmatic mvv
 bugs that are quite worth trying to fix yet
     volume slider grows if dragged to 100
 todo
+remove devices code from playervm. it will need devices data at some point, but will get it from appstate
 selecting playlist should deselect other home/lib/search and vice versa
 some characters are showing as unicode
     HttpUtility.HtmlDecode from a quick google maybe?

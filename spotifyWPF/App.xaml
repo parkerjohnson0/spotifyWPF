@@ -137,6 +137,9 @@
             <FontFamily x:Key="CircularBold">
                 ./View/Fonts/CircularStd-Bold.otf#Circular Std Bold
             </FontFamily>
+            <FontFamily x:Key="CircularLight">
+                ./View/Fonts/CircularStd-Light.otf#Circular Std Light
+            </FontFamily>
             <Style x:Key="navButton" TargetType="{x:Type Button}">
                 <Setter Property="Template">
                     <Setter.Value>

@@ -65,7 +65,7 @@
             </controls:AuthUC.Style>
         </controls:AuthUC>
         <controls:DevicesUC 
-                            Margin="0,0,70,100"
+                            Margin="0,0,70,60"
                             DataContext="{Binding DevicesVm}"
                             VerticalAlignment="Bottom"
                             HorizontalAlignment="Right" />

@@ -19,6 +19,9 @@
       <None Remove="View\Fonts\CircularStd-Light.otf" />
       <None Remove="View\Fonts\CircularStd-Medium.otf" />
       <None Remove="View\Fonts\CircularStd-MediumItalic.otf" />
+      <None Remove="View\Resources\Icons\computer_device.png" />
+      <None Remove="View\Resources\Icons\device_speaker.png" />
+      <None Remove="View\Resources\Icons\device_speaker_green.png" />
       <None Remove="View\Resources\Icons\home_clicked.png" />
       <None Remove="View\Resources\Icons\home_unclicked.png" />
       <None Remove="View\Resources\Icons\home_unclicked_alt.png" />
@@ -59,6 +62,15 @@
       </Content>
       <Content Include="View\Fonts\CircularStd-MediumItalic.otf">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\computer_device.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\device_speaker.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\device_speaker_green.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <Content Include="View\Resources\Icons\home_clicked.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -116,6 +128,10 @@
       </Content>
       <None Remove="View\Resources\Icons\speaker_clicked_alt.png" />
       <Content Include="View\Resources\Icons\speaker_clicked_alt.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\spotify_devices_ripped.png" />
+      <Content Include="View\Resources\Icons\spotify_devices_ripped.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>

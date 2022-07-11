@@ -47,7 +47,7 @@ public class PlayerVM : ViewModelBase
         ToggleDeviceControlCommand = new ToggleDeviceControlCommand(this);
         MuteVolumeCommand = new MuteVolumeCommand(this);
         VolumeSliderCommand = new VolumeSliderCommand(this);
-        AppState.OnAuthorized += PlayerVMAuthorized;
+    //    AppState.OnAuthorized += PlayerVMAuthorized;
     }
 
     private async void PlayerVMAuthorized(object? sender, EventArgs e)

@@ -6,13 +6,95 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:spotifyWPF.View.Controls"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300"
              BorderBrush="Transparent"
-             Width="300"
-             Height="250"
-             >
+             Width="280"
+             Height="410">
+    <d:UserControl.DataContext>
+        <vm:DevicesVM />
+    </d:UserControl.DataContext>
     <Grid Visibility="{Binding Visibility}"
-          Background="#282828"
-          Margin="0,0,0,0">
+          d:Visibility="Visible">
+        <Polygon Points="2,0 0,2 0,400 140,400 150,410 160,400 300,400 300, 2
+            298,0" Fill="#282828"
+                 Stroke="#282828"
+                 HorizontalAlignment="Center">
+            <Polygon.Effect>
+                <DropShadowEffect Direction="0"
+                                  ShadowDepth="0"
+                                  BlurRadius="25"
+                                  Color="#1d1d1d" />
+            </Polygon.Effect>
+        </Polygon>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="5*" />
+            </Grid.RowDefinitions>
+            <StackPanel
+                VerticalAlignment="Bottom">
+                <TextBlock Text="Connect to a device"
+                           FontSize="22"
+                           HorizontalAlignment="Center"
+                           Foreground="White"
+                           FontWeight="SemiBold"
+                           FontFamily="{StaticResource CircularMedium}" />
+                <Image Margin="0,20,0,0"
+                       Source="/View/Resources/Icons/spotify_devices_ripped.png"
+                       Width="200">
+                </Image>
+            </StackPanel>
+            <ListView Background="Transparent"
+                Height="240"
+                ItemsSource="{Binding Devices}"
+                      BorderBrush="Transparent"
+                Grid.Row="1">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                    <Border BorderBrush="Transparent" BorderThickness="2">
+
+                                        <Grid Height="50" x:Name="DeviceItem">
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="75"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Image
+                                            Source="/View/Resources/Icons/computer_device.png">
+
+                                            </Image>
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock 
+                                                   Foreground="White"
+                                                   FontFamily="{StaticResource CircularBook}"
+                                            Text="{Binding Name}"
+                                                Margin="0,5"/>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Width="12"
+                                                       Margin="0,0,5,0"
+                                                    Source="/View/Resources/Icons/device_speaker.png"/>
+                                                    <TextBlock 
+                                                   Foreground="#a7a7a7"
+                                                    
+                                                   FontFamily="{StaticResource CircularLight}"
+                                            Text="Spotify Connect"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" TargetName="DeviceItem" Value="#333333"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
     </Grid>
 </UserControl>
