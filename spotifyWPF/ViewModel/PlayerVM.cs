@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -15,7 +16,15 @@ namespace spotifyWPF.ViewModel;
 public class PlayerVM : ViewModelBase
 {
     private string _getDevicesUrl = "https://api.spotify.com/v1/me/player/devices";
+    private string _startPlaybackUrl = "https://api.spotify.com/v1/me/player/play?device_id=";
     public VolumeSliderCommand VolumeSliderCommand { get; set; }
+    private bool _isPlaying;
+
+    public bool IsPlaying
+    {
+        get { return _isPlaying; }
+        set { _isPlaying = value; NotifyPropertyChanged(); }
+    } 
     private bool _isMuted;
 
     public bool IsMuted
@@ -42,8 +51,10 @@ public class PlayerVM : ViewModelBase
 
     public MuteVolumeCommand MuteVolumeCommand { get; set; }
 
+    public StartPlaybackCommand StartPlaybackCommand { get; set; }
     public PlayerVM()
     {
+        StartPlaybackCommand = new StartPlaybackCommand(this);
         ToggleDeviceControlCommand = new ToggleDeviceControlCommand(this);
         MuteVolumeCommand = new MuteVolumeCommand(this);
         VolumeSliderCommand = new VolumeSliderCommand(this);
@@ -90,5 +101,14 @@ public class PlayerVM : ViewModelBase
     public void ToggleDeviceWindowVisibility(Visibility state)
     {
         AppState.DeviceControlVisibility = state == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    public async Task<bool> StartPlayback()
+    {
+        HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Put, _startPlaybackUrl + AppState.SelectedDevice.ID);
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AppState.AccessToken);
+        HttpResponseMessage resp = await HttpClient.SendAsync(req);
+        IsPlaying = resp.StatusCode == HttpStatusCode.NoContent;
+        return resp.StatusCode == HttpStatusCode.NoContent;
     }
 }

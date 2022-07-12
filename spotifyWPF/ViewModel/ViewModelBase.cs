@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using spotifyWPF.Model.App;
 using spotifyWPF.Model.Nav;
+using spotifyWPF.Model.Player;
 
 namespace spotifyWPF.ViewModel
 {
@@ -49,6 +50,7 @@ namespace spotifyWPF.ViewModel
         public event EventHandler OnAuthorized;
         public event EventHandler OnPlaylistDataUpdated;
         public event EventHandler OnDeviceControlClicked;
+        public event EventHandler OnPlaybackStateChanged;
         public event EventHandler OnDeviceControlUnfocused;
 
         private RootTemplate _rootTemplate = RootTemplate.Loading;
@@ -66,6 +68,19 @@ namespace spotifyWPF.ViewModel
             }
         }
 
+        private PlaybackState _playbackState;
+        public PlaybackState PlaybackState
+        {
+            get { return _playbackState;}
+            set
+            {
+                if (_playbackState is null) return;
+                _playbackState = value;
+                NotifyPropertyChanged();
+                OnPlaybackStateChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+        public Device SelectedDevice { get; set; }
         public bool? DeviceControlIsFocused { get; set; } = null;
         private Visibility _deviceControlVisibility = Visibility.Collapsed;
 
@@ -81,7 +96,7 @@ namespace spotifyWPF.ViewModel
 
             }
         }
-
+        public bool IsPlaying { get; set; }
         private bool _authorized;
 
         public bool Authorized

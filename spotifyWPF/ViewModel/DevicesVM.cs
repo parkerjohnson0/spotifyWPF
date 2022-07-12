@@ -1,28 +1,63 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Windows;
 using Newtonsoft.Json.Linq;
+using spotifyWPF.Model.App;
 using spotifyWPF.Model.Player;
 
 namespace spotifyWPF.ViewModel;
 
 public class DevicesVM : ViewModelBase
 {
+    internal class SelectedDeviceArgs : EventArgs
+    {
+        public Device Device { get; set; }
+
+        public SelectedDeviceArgs(Device device)
+        {
+            Device = device;
+        }
+    }
+
+    private EventHandler<SelectedDeviceArgs> OnSelectedDeviceChanged;
     private bool _deviceControlFocused;
 
     private string _getDevicesUrl = "https://api.spotify.com/v1/me/player/devices";
+    private string _playerUrl = "https://api.spotify.com/v1/me/player";
     public ObservableCollection<Device> Devices { get; set; } = new ObservableCollection<Device>();
+    private Device _selectedDevice;
+
+    public Device SelectedDevice
+    {
+        get { return _selectedDevice; }
+        set
+        {
+            //shouldnt select device if transerplayback fails for whatever reason. though xaml IsSelected might still change
+            OnSelectedDeviceChanged?.Invoke(this, new SelectedDeviceArgs(value));
+            NotifyPropertyChanged();
+        }
+    }
+
+
     public bool DeviceControlFocused
     {
         get { return _deviceControlFocused; }
-        set { _deviceControlFocused = value; NotifyPropertyChanged(); }
+        set
+        {
+            _deviceControlFocused = value;
+            NotifyPropertyChanged();
+        }
     }
+
     private Visibility _visibility = Visibility.Collapsed;
 
     public Visibility Visibility
@@ -37,6 +72,7 @@ public class DevicesVM : ViewModelBase
 
     public DevicesVM()
     {
+        OnSelectedDeviceChanged += SelectedDeviceChanged;
         if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
         {
             Devices.Add(new Device()
@@ -60,16 +96,56 @@ public class DevicesVM : ViewModelBase
                 IsPrivateSession = false
             });
         }
+
         AppState.OnAuthorized += DevicesVMAuthorized;
         AppState.OnDeviceControlClicked += (sender, args) => Visibility = AppState.DeviceControlVisibility;
         AppState.OnDeviceControlUnfocused += (sender, args) => Visibility = AppState.DeviceControlVisibility;
+    }
 
+    private async void SelectedDeviceChanged(object? sender, SelectedDeviceArgs e)
+    {
+        if (!await TransferPlayback(e.Device)) return;
+
+        _selectedDevice = e.Device;
+        AppState.PlaybackState = await GetPlaybackState();
+        AppState.SelectedDevice = _selectedDevice;
+    }
+
+    private async Task<PlaybackState> GetPlaybackState()
+    {
+        HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, _playerUrl);
+
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AppState.AccessToken);
+        HttpResponseMessage resp = await HttpClient.SendAsync(req);
+        JObject obj = JObject.Parse(resp.Content.ReadAsStringAsync().Result);
+        PlaybackState playbackState = new PlaybackState()
+        {
+            IsPlaying = Boolean.Parse(obj.SelectToken("is_playing").ToString())
+        };
+        return playbackState;
+    }
+
+
+    private async Task<bool> TransferPlayback(Device device)
+    {
+        var body = new
+        {
+            device_ids = new string[] { device.ID }
+        };
+        var json = JsonSerializer.Serialize(body);
+        HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Put, _playerUrl);
+
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AppState.AccessToken);
+        req.Content = new StringContent(json, Encoding.UTF8, "application/json");
+        HttpResponseMessage resp = await HttpClient.SendAsync(req);
+        return resp.StatusCode == HttpStatusCode.NoContent;
     }
 
     private async void DevicesVMAuthorized(object? sender, EventArgs e)
     {
-            await GetDevices();
+        await GetDevices();
     }
+
     private async Task GetDevices()
     {
         HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, _getDevicesUrl);

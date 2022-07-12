@@ -45,6 +45,7 @@
             </StackPanel>
             <ListView Background="Transparent"
                 Height="240"
+                SelectedItem="{Binding SelectedDevice}"
                 ItemsSource="{Binding Devices}"
                       BorderBrush="Transparent"
                 Grid.Row="1">
@@ -61,23 +62,23 @@
                                                 <ColumnDefinition Width="75"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            <Image
+                                            <Image Name="DeviceImage"
                                             Source="/View/Resources/Icons/computer_device.png">
 
                                             </Image>
                                             <StackPanel Grid.Column="1">
-                                                <TextBlock 
+                                                <TextBlock Name="DeviceName"
                                                    Foreground="White"
                                                    FontFamily="{StaticResource CircularBook}"
                                             Text="{Binding Name}"
                                                 Margin="0,5"/>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <Image Width="12"
+                                                    <Image Width="12" Name="SpeakerImage"
                                                        Margin="0,0,5,0"
                                                     Source="/View/Resources/Icons/device_speaker.png"/>
                                                     <TextBlock 
                                                    Foreground="#a7a7a7"
-                                                    
+                                                    Name="DeviceConnectText" 
                                                    FontFamily="{StaticResource CircularLight}"
                                             Text="Spotify Connect"/>
                                                 </StackPanel>
@@ -87,6 +88,12 @@
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
                                             <Setter Property="Background" TargetName="DeviceItem" Value="#333333"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Source" TargetName="DeviceImage" Value="/View/Resources/Icons/computer_device_green.png"/>
+                                            <Setter Property="Source" TargetName="SpeakerImage" Value="/View/Resources/Icons/device_speaker_green.png"/>
+                                            <Setter Property="Foreground" TargetName="DeviceName" Value="#1DB954"/>
+                                            <Setter Property="Foreground" TargetName="DeviceConnectText" Value="#1DB954"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>

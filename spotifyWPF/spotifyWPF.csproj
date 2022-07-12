@@ -134,6 +134,62 @@
       <Content Include="View\Resources\Icons\spotify_devices_ripped.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+      <None Remove="View\Resources\Icons\computer_device_green.png" />
+      <Content Include="View\Resources\Icons\computer_device_green.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\previous_button.png" />
+      <Content Include="View\Resources\Icons\previous_button.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\previous_button_alt.png" />
+      <Content Include="View\Resources\Icons\previous_button_alt.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\next_button_alt.png" />
+      <Content Include="View\Resources\Icons\next_button_alt.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\next_button.png" />
+      <Content Include="View\Resources\Icons\next_button.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\repeat.png" />
+      <Content Include="View\Resources\Icons\repeat.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\repeat_alt.png" />
+      <Content Include="View\Resources\Icons\repeat_alt.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\repeat_green.png" />
+      <Content Include="View\Resources\Icons\repeat_green.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\repeat_green_alt.png" />
+      <Content Include="View\Resources\Icons\repeat_green_alt.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\shuffle.png" />
+      <Content Include="View\Resources\Icons\shuffle.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\shuffle_alt.png" />
+      <Content Include="View\Resources\Icons\shuffle_alt.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\shuffle_green.png" />
+      <Content Include="View\Resources\Icons\shuffle_green.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\shuffle_green_alt.png" />
+      <Content Include="View\Resources\Icons\shuffle_green_alt.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\pause.png" />
+      <Content Include="View\Resources\Icons\pause.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>
