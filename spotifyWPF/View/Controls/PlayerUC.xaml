@@ -15,13 +15,15 @@
     </UserControl.DataContext>
     <UserControl.Resources>
         <conv:SliderCircleConverter x:Key="SliderCircleConv" />
+        <conv:PlayerCircleConverter x:Key="PlayerCircleConv" />
+        <conv:PlayerProgressConverter x:Key="PlayerProgressConv" />
         <Style TargetType="{x:Type Grid}" x:Key="playButtonGridHover">
-            <Setter Property="Height" Value="32" />
-            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Width" Value="30" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Height" Value="34" />
-                    <Setter Property="Width" Value="34" />
+                    <Setter Property="Height" Value="31" />
+                    <Setter Property="Width" Value="31" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -41,7 +43,7 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -55,7 +57,7 @@
                     <Setter Property="Background" Value="#181818" />
                     <Setter Property="Effect">
                         <Setter.Value>
-                            <BlurEffect Radius="5"></BlurEffect>
+                            <BlurEffect Radius="0"></BlurEffect>
                         </Setter.Value>
                     </Setter>
                     <Style.Triggers>
@@ -70,10 +72,67 @@
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
+
+            <Grid Grid.RowSpan="4" HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition
+                        Width="*" />
+                    <ColumnDefinition
+                        MaxWidth="30"
+                        MinWidth="30" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Image Source="{Binding PlaybackState.Track.AlbumArt}"
+                       Grid.RowSpan="3"
+                       Margin="20,0"
+                       HorizontalAlignment="Left"
+                       Width="64" Height="64">
+                </Image>
+                <Grid Grid.Column="1" Grid.RowSpan="2">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Foreground="White" VerticalAlignment="Bottom"
+                                   FontFamily="{StaticResource CircularBook}"
+                                   Text="{Binding PlaybackState.Track.Title}"
+                                   TextTrimming="CharacterEllipsis" />
+                        <TextBlock Foreground="LightGray"
+                                   Grid.Row="1"
+                                   FontSize="10"
+                                   FontFamily="{StaticResource CircularLight}"
+                                   Text="{Binding PlaybackState.Track.Artist}" />
+                    </Grid>
+                </Grid>
+                <Image Grid.Column="3" Grid.RowSpan="2"
+                       Height="24">
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Setter Property="Image.Source" Value="/View/Resources/Icons/heart.png" />
+                            <Style.Triggers>
+                                <Trigger Property="Image.IsMouseOver" Value="True">
+                                    <Setter Property="Image.Source"
+                                            Value="/View/Resources/Icons/heart_alt.png" />
+                                </Trigger>
+                                <DataTrigger Binding="{Binding PlaybackState}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+
+                        </Style>
+                    </Image.Style>
+                </Image>
+
+            </Grid>
             <Grid Grid.Column="1" Grid.RowSpan="3">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Image 
-                           Height="24" >
+                    <Image
+                        Height="24">
                         <Image.Style>
                             <Style TargetType="{x:Type Image}">
                                 <Setter Property="Image.Source" Value="/View/Resources/Icons/shuffle.png" />
@@ -86,8 +145,8 @@
                             </Style>
                         </Image.Style>
                     </Image>
-                    <Image 
-                           Height="24" Margin="20,0">
+                    <Image
+                        Height="24" Margin="20,0">
                         <Image.Style>
                             <Style TargetType="{x:Type Image}">
                                 <Setter Property="Image.Source" Value="/View/Resources/Icons/previous_button.png" />
@@ -108,22 +167,29 @@
                             <Ellipse Style="{StaticResource playButtonEllipseHover}">
 
                             </Ellipse>
-                            <Image
-                                Height="18" Width="18">
+                            <Image>
                                 <Image.Style>
                                     <Style TargetType="{x:Type Image}">
-                                        <Setter Property="Source" Value="/View/Resources/Icons/play.png"/>
+                                        <Setter Property="Source" Value="/View/Resources/Icons/play.png" />
+                                        <Setter Property="Width" Value="20" />
+                                        <Setter Property="Height" Value="20" />
                                         <Style.Triggers>
-                                           <DataTrigger Binding="{Binding IsPlaying}" Value="True">
-                                               <Setter Property="Source" Value="/View/Resources/Icons/pause.png"/>
-                                           </DataTrigger>                                             
+                                            <DataTrigger Binding="{Binding PlaybackState.IsPlaying}" Value="True">
+                                                <Setter Property="Source" Value="/View/Resources/Icons/pause.png" />
+                                            </DataTrigger>
+                                            <DataTrigger
+                                                Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=IsMouseOver}"
+                                                Value="True">
+                                                <Setter Property="Width" Value="21" />
+                                                <Setter Property="Height" Value="21" />
+                                            </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Image.Style>
                             </Image>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseLeftButtonUp">
-                                    <i:InvokeCommandAction Command="{Binding StartPlaybackCommand}"></i:InvokeCommandAction>
+                                    <i:InvokeCommandAction Command="{Binding TogglePlaybackCommand}"></i:InvokeCommandAction>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Grid>
@@ -157,6 +223,181 @@
                     </Image>
                 </StackPanel>
             </Grid>
+            <Grid Grid.Column="1"
+                  Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                       Foreground="White"
+                           VerticalAlignment="Bottom"
+                       Text="{Binding PlaybackState.Progress}"/>
+                <Border Margin="0,5,0,0"
+                    Grid.Column="1"
+                    BorderBrush="Transparent" BorderThickness="3" Background="Transparent"
+                    Height="25">
+                    <Grid>
+                        <Rectangle Height="4" Fill="#5e5e5e" RadiusX="2"
+                               RadiusY="2"
+                               x:Name="PlayerSlider"
+                               IsHitTestVisible="False"
+                               Margin="0,5,0,5">
+                        </Rectangle>
+                        <RepeatButton Command="{Binding PlayerSliderCommand}"
+                                  CommandParameter="{Binding ElementName=PlayerSlider}"
+                                  Interval="2000">
+                            <RepeatButton.Style>
+                                <Style TargetType="{x:Type RepeatButton}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid Background="Transparent">
+                                                    <Rectangle Height="5"
+                                                           HorizontalAlignment="
+                                                           Left"
+                                                           RadiusX="2"
+                                                           RadiusY="2"
+                                                           Margin="0,5,0,5">
+
+                                                        <Rectangle.Width>
+                                                            <MultiBinding Converter="{StaticResource PlayerProgressConv}" >
+                                                                <Binding Path="PlaybackState" UpdateSourceTrigger="PropertyChanged"/>
+                                                                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Grid}" Path="ActualWidth"/>
+                                                            </MultiBinding>
+                                                        </Rectangle.Width>
+                                                        <Rectangle.Style>
+                                                            <Style TargetType="{x:Type Rectangle}">
+                                                                <Setter Property="Fill" Value="White"></Setter>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger
+                                                                    Binding="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                                    AncestorType={x:Type Border}},Path=IsMouseOver}"
+                                                                    Value="True">
+                                                                        <Setter Property="Fill" Value="#1db954" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Rectangle.Style>
+                                                    </Rectangle>
+                                                    <Ellipse Height="10" Width="10" Fill="White"
+                                                         HorizontalAlignment="Left"
+                                                         Margin="{Binding PlaybackState, Converter={StaticResource PlayerCircleConv}}">
+                                                        <Ellipse.Style>
+                                                            <Style TargetType="{x:Type Ellipse}">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger
+                                                                    Binding="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                                        AncestorType={x:Type Border}},Path=IsMouseOver}"
+                                                                    Value="True">
+                                                                        <Setter Property="Visibility"
+                                                                            Value="Visible" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Ellipse.Style>
+                                                    </Ellipse>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </RepeatButton.Style>
+                        </RepeatButton>
+                    </Grid>
+                </Border>
+                <TextBlock Grid.Column="2"
+                       HorizontalAlignment="Right"
+                           VerticalAlignment="Bottom"
+                       Foreground="White"
+                       Text="{Binding PlaybackState.Track.Duration}"/>
+            </Grid>
+            <!--<TextBlock Grid.Column=""
+                       Grid.Row="2"
+                       Foreground="White"
+                       Text="{Binding PlaybackState.Progress}"/>
+            <Border Margin="0,5,0,0"
+                    Grid.Column="1"
+                    Grid.Row="2"
+                    BorderBrush="Transparent" BorderThickness="3" Background="Transparent"
+                    Height="25">
+                <Grid>
+                    <Rectangle Height="4" Fill="#5e5e5e" RadiusX="2"
+                               RadiusY="2"
+                               x:Name="PlayerSlider"
+                               IsHitTestVisible="False"
+                               Margin="0,5,0,5">
+                    </Rectangle>
+                    <RepeatButton Command="{Binding PlayerSliderCommand}"
+                                  CommandParameter="{Binding ElementName=PlayerSlider}"
+                                  Interval="2000">
+                        <RepeatButton.Style>
+                            <Style TargetType="{x:Type RepeatButton}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Grid Background="Transparent">
+                                                <Rectangle Height="5"
+                                                           HorizontalAlignment="
+                                                           Left"
+                                                           RadiusX="2"
+                                                           RadiusY="2"
+                                                           Margin="0,5,0,5">
+
+                                                    <Rectangle.Width>
+                                                        <MultiBinding Converter="{StaticResource PlayerProgressConv}" >
+                                                            <Binding Path="PlaybackState" UpdateSourceTrigger="PropertyChanged"/>
+                                                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Grid}" Path="ActualWidth"/>
+                                                   </MultiBinding>
+                                                    </Rectangle.Width>
+                                                    <Rectangle.Style>
+                                                        <Style TargetType="{x:Type Rectangle}">
+                                                            <Setter Property="Fill" Value="White"></Setter>
+                                                            <Style.Triggers>
+                                                                <DataTrigger
+                                                                    Binding="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                                    AncestorType={x:Type Border}},Path=IsMouseOver}"
+                                                                    Value="True">
+                                                                    <Setter Property="Fill" Value="#1db954" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Rectangle.Style>
+                                                </Rectangle>
+                                                <Ellipse Height="10" Width="10" Fill="White"
+                                                         HorizontalAlignment="Left"
+                                                         Margin="{Binding PlaybackState, Converter={StaticResource PlayerCircleConv}}">
+                                                    <Ellipse.Style>
+                                                        <Style TargetType="{x:Type Ellipse}">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger
+                                                                    Binding="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                                        AncestorType={x:Type Border}},Path=IsMouseOver}"
+                                                                    Value="True">
+                                                                    <Setter Property="Visibility"
+                                                                            Value="Visible" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Ellipse.Style>
+                                                </Ellipse>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </RepeatButton.Style>
+                    </RepeatButton>
+                </Grid>
+            </Border>
+            <TextBlock Grid.Column="1"
+                       Grid.Row="2"
+                       HorizontalAlignment="Right"
+                       Foreground="White"
+                       Text="{Binding PlaybackState.Track.Duration}"/>-->
             <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2"
                         HorizontalAlignment="Right" Margin="0,0,50,0">
                 <Image Name="DeviceImage"
@@ -217,12 +458,12 @@
                     <Grid>
                         <Rectangle Height="5" Width="100" Fill="#5e5e5e" RadiusX="2"
                                    RadiusY="2"
-                                   x:Name="PlaylistBar"
+                                   x:Name="VolumeBar"
                                    IsHitTestVisible="False"
                                    Margin="5">
                         </Rectangle>
                         <RepeatButton Command="{Binding VolumeSliderCommand}"
-                                      CommandParameter="{Binding ElementName=PlaylistBar}"
+                                      CommandParameter="{Binding ElementName=VolumeBar}"
                                       Interval="10">
                             <RepeatButton.Style>
                                 <Style TargetType="{x:Type RepeatButton}">
@@ -257,7 +498,7 @@
                                                                 <Style.Triggers>
                                                                     <DataTrigger
                                                                         Binding="{Binding RelativeSource={RelativeSource FindAncestor, 
-                                        AncestorType={x:Type Border}},Path=IsMouseOver}"
+                                                                        AncestorType={x:Type Border}},Path=IsMouseOver}"
                                                                         Value="True">
                                                                         <Setter Property="Visibility"
                                                                             Value="Visible" />

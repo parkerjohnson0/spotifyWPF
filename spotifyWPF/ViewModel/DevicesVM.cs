@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Animation;
 using Newtonsoft.Json.Linq;
 using spotifyWPF.Model.App;
 using spotifyWPF.Model.Player;
@@ -105,7 +106,7 @@ public class DevicesVM : ViewModelBase
     private async void SelectedDeviceChanged(object? sender, SelectedDeviceArgs e)
     {
         if (!await TransferPlayback(e.Device)) return;
-
+        await Task.Delay(1000);
         _selectedDevice = e.Device;
         AppState.PlaybackState = await GetPlaybackState();
         AppState.SelectedDevice = _selectedDevice;
@@ -120,7 +121,25 @@ public class DevicesVM : ViewModelBase
         JObject obj = JObject.Parse(resp.Content.ReadAsStringAsync().Result);
         PlaybackState playbackState = new PlaybackState()
         {
-            IsPlaying = Boolean.Parse(obj.SelectToken("is_playing").ToString())
+            IsPlaying = Boolean.Parse(obj.SelectToken("is_playing").ToString()),
+            Device = new Device()
+            {
+                ID = obj.SelectToken("device.id").ToString(),
+                Volume = Int32.Parse(obj.SelectToken("device.volume_percent").ToString()),
+                Name = obj.SelectToken("device.name").ToString()
+            },
+            Track = new Track()
+            {
+                Album = obj.SelectToken("item.album.name").ToString(),
+                Artist = obj.SelectToken("item.artists[0].name").ToString(),
+                Title = obj.SelectToken("item.name").ToString(),
+                AlbumArt = obj.SelectToken("item.album.images[0].url").ToString(),
+                DurationMS = long.Parse(obj.SelectToken("item.duration_ms").ToString())
+            },
+            RepeatState = (RepeatState) Enum.Parse(typeof(RepeatState), obj.SelectToken("repeat_state").ToString()),
+            ShuffleState = Boolean.Parse(obj.SelectToken("shuffle_state").ToString()),
+            ProgressMS = (long) obj.SelectToken("progress_ms")
+            
         };
         return playbackState;
     }

@@ -30,6 +30,7 @@ selecting playlist should deselect other home/lib/search and vice versa
 some characters are showing as unicode
     HttpUtility.HtmlDecode from a quick google maybe?
 clean up some stuff from rootvm
+play/pause buttons icons do not resize on hover
 give each vm authorized property which returns from static app.authorized
 add authorization to each control that should be blurred and disabled before auth 
 	not quite ready to work yet. property wont update 
@@ -38,6 +39,8 @@ disable interaction with UI until authorized
 use pkce auth flow. so that way token can be stored for longer. otherwise would have to refresh token every hour if access token not replace with refresh token. 
 
 long term
+    create service to access spotify api. introduce rate limiting and retries
+    recreate the scrolling text name for songs when a track's name is too long
     do I have to do all these events? i think some could be replaced
     should be able to remove the 'Active' property on track. Just use IsSelected on the listviewitem template like I did for devices
     refactor to include a master viewmodel that holds appstate, and all the other viewmodels. so the setters within each vm can just update appstate of master vm

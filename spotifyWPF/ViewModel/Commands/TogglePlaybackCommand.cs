@@ -3,10 +3,10 @@ using System.Windows.Input;
 
 namespace spotifyWPF.ViewModel.Commands;
 
-public class StartPlaybackCommand : ICommand
+public class TogglePlaybackCommand : ICommand
 {
     private PlayerVM _vm;
-    public StartPlaybackCommand(PlayerVM vm)
+    public TogglePlaybackCommand(PlayerVM vm)
     {
         _vm = vm;
     }

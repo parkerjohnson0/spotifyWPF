@@ -74,7 +74,7 @@ namespace spotifyWPF.ViewModel
             get { return _playbackState;}
             set
             {
-                if (_playbackState is null) return;
+                if (value is null) return;
                 _playbackState = value;
                 NotifyPropertyChanged();
                 OnPlaybackStateChanged?.Invoke(this, EventArgs.Empty);

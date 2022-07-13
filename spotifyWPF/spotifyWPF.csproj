@@ -22,6 +22,9 @@
       <None Remove="View\Resources\Icons\computer_device.png" />
       <None Remove="View\Resources\Icons\device_speaker.png" />
       <None Remove="View\Resources\Icons\device_speaker_green.png" />
+      <None Remove="View\Resources\Icons\heart.png" />
+      <None Remove="View\Resources\Icons\heart_alt.png" />
+      <None Remove="View\Resources\Icons\heart_green.png" />
       <None Remove="View\Resources\Icons\home_clicked.png" />
       <None Remove="View\Resources\Icons\home_unclicked.png" />
       <None Remove="View\Resources\Icons\home_unclicked_alt.png" />
@@ -70,6 +73,15 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <Content Include="View\Resources\Icons\device_speaker_green.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\heart.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\heart_alt.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\heart_green.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <Content Include="View\Resources\Icons\home_clicked.png">
