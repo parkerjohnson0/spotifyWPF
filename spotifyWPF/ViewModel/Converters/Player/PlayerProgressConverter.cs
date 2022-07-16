@@ -12,10 +12,10 @@ public class PlayerProgressConverter : IMultiValueConverter
 {
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
-        if (values[0] is null || values[1] is null ) return 0;
+        if (values[0] is null || values[1] is null || values[2] is null ) return 0;
 
-        PlaybackState state = values[0] as PlaybackState;
-        double width = (double)values[1];
+        PlaybackState state = values[1] as PlaybackState;
+        double width = (double)values[2];
         double ratio = (double) state.ProgressMS / state.Track.DurationMS;
         return width * ratio;
     }

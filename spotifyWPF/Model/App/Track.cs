@@ -6,6 +6,7 @@ namespace spotifyWPF.Model.App;
 
 public class Track  : INotifyPropertyChanged
 {
+    public string ID { get; set; }
    public string Title { get; set; } 
    public string Artist { get; set; }
    private bool _active;

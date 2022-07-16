@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Threading;
 using spotifyWPF.Model.Player;
 
 namespace spotifyWPF.Model.App;
@@ -13,6 +15,26 @@ public enum RepeatState
 
 public class PlaybackState : INotifyPropertyChanged
 {
+    private DispatcherTimer _playbackTick { get; set; }
+    public EventHandler OnSongEnd;
+    public PlaybackState()
+    {
+        _playbackTick = new DispatcherTimer();
+        _playbackTick.Tick += PlaybackTickOnTick; 
+        _playbackTick.Interval = new TimeSpan(0, 0, 1); 
+    }
+
+    private void PlaybackTickOnTick(object? sender, EventArgs e)
+    {
+        ProgressMS += 1000;
+        if (_progressMS >= Track.DurationMS)
+        {
+            _playbackTick.Stop();
+           OnSongEnd?.Invoke(this, EventArgs.Empty);
+
+        }
+    }
+
     public Device Device { get; set; }
 
     private bool _isPlaying;
@@ -24,6 +46,14 @@ public class PlaybackState : INotifyPropertyChanged
         {
             _isPlaying = value;
             NotifyPropertyChanged();
+            if (_isPlaying)
+            {
+                _playbackTick.Start();
+            }
+            else
+            {
+                _playbackTick.Stop();
+            }
         }
     }
 
@@ -75,6 +105,7 @@ public class PlaybackState : INotifyPropertyChanged
         {
             _progressMS = value;
             NotifyPropertyChanged();
+            NotifyPropertyChanged(nameof(Progress));
         }
     }
 

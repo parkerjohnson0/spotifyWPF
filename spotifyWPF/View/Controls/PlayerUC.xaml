@@ -76,7 +76,7 @@
             <Grid Grid.RowSpan="4" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100" />
-                    <ColumnDefinition
+                    <ColumnDefinition MinWidth="80"
                         Width="*" />
                     <ColumnDefinition
                         MaxWidth="30"
@@ -158,6 +158,11 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonUp">
+                                <i:InvokeCommandAction Command="{Binding PreviousSongCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </Image>
                     <Grid Width="36">
                         <Grid Style="{StaticResource playButtonGridHover}" Margin="00,0">
@@ -207,6 +212,11 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonUp">
+                                <i:InvokeCommandAction Command="{Binding NextSongCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </Image>
                     <Image
                         Height="24">
@@ -226,28 +236,29 @@
             <Grid Grid.Column="1"
                   Grid.Row="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
-                       Foreground="White"
+                           Foreground="#BABABA"
                            VerticalAlignment="Bottom"
-                       Text="{Binding PlaybackState.Progress}"/>
+                           Margin="5,0"
+                           Text="{Binding PlaybackState.Progress}" />
                 <Border Margin="0,5,0,0"
-                    Grid.Column="1"
-                    BorderBrush="Transparent" BorderThickness="3" Background="Transparent"
-                    Height="25">
+                        Grid.Column="1"
+                        BorderBrush="Transparent" BorderThickness="3" Background="Transparent"
+                        Height="25">
                     <Grid>
                         <Rectangle Height="4" Fill="#5e5e5e" RadiusX="2"
-                               RadiusY="2"
-                               x:Name="PlayerSlider"
-                               IsHitTestVisible="False"
-                               Margin="0,5,0,5">
+                                   RadiusY="2"
+                                   x:Name="PlayerSlider"
+                                   IsHitTestVisible="False"
+                                   Margin="0,2,0,5">
                         </Rectangle>
                         <RepeatButton Command="{Binding PlayerSliderCommand}"
-                                  CommandParameter="{Binding ElementName=PlayerSlider}"
-                                  Interval="2000">
+                                      CommandParameter="{Binding ElementName=PlayerSlider}"
+                                      Interval="2000">
                             <RepeatButton.Style>
                                 <Style TargetType="{x:Type RepeatButton}">
                                     <Setter Property="Template">
@@ -255,16 +266,22 @@
                                             <ControlTemplate>
                                                 <Grid Background="Transparent">
                                                     <Rectangle Height="5"
-                                                           HorizontalAlignment="
-                                                           Left"
-                                                           RadiusX="2"
-                                                           RadiusY="2"
-                                                           Margin="0,5,0,5">
+                                                               HorizontalAlignment="Left"
+                                                               Name="PlayerProgress"
+                                                               RadiusX="2"
+                                                               RadiusY="2"
+                                                               Margin="0,2,0,5">
 
                                                         <Rectangle.Width>
-                                                            <MultiBinding Converter="{StaticResource PlayerProgressConv}" >
-                                                                <Binding Path="PlaybackState" UpdateSourceTrigger="PropertyChanged"/>
-                                                                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Grid}" Path="ActualWidth"/>
+                                                            <MultiBinding
+                                                                Converter="{StaticResource PlayerProgressConv}">
+                                                                <Binding Path="PlaybackState.ProgressMS"
+                                                                         UpdateSourceTrigger="PropertyChanged" />
+                                                                <Binding Path="PlaybackState"
+                                                                         UpdateSourceTrigger="PropertyChanged" />
+                                                                <Binding
+                                                                    RelativeSource="{RelativeSource FindAncestor, AncestorType=Grid}"
+                                                                    Path="ActualWidth" />
                                                             </MultiBinding>
                                                         </Rectangle.Width>
                                                         <Rectangle.Style>
@@ -272,9 +289,9 @@
                                                                 <Setter Property="Fill" Value="White"></Setter>
                                                                 <Style.Triggers>
                                                                     <DataTrigger
-                                                                    Binding="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                                        Binding="{Binding RelativeSource={RelativeSource FindAncestor, 
                                                                     AncestorType={x:Type Border}},Path=IsMouseOver}"
-                                                                    Value="True">
+                                                                        Value="True">
                                                                         <Setter Property="Fill" Value="#1db954" />
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
@@ -282,16 +299,16 @@
                                                         </Rectangle.Style>
                                                     </Rectangle>
                                                     <Ellipse Height="10" Width="10" Fill="White"
-                                                         HorizontalAlignment="Left"
-                                                         Margin="{Binding PlaybackState, Converter={StaticResource PlayerCircleConv}}">
+                                                             HorizontalAlignment="Left"
+                                                             Margin="{Binding ElementName=PlayerProgress,Path=ActualWidth, Converter={StaticResource PlayerCircleConv},ConverterParameter=5}">
                                                         <Ellipse.Style>
                                                             <Style TargetType="{x:Type Ellipse}">
                                                                 <Setter Property="Visibility" Value="Collapsed" />
                                                                 <Style.Triggers>
                                                                     <DataTrigger
-                                                                    Binding="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                                        Binding="{Binding RelativeSource={RelativeSource FindAncestor, 
                                                                         AncestorType={x:Type Border}},Path=IsMouseOver}"
-                                                                    Value="True">
+                                                                        Value="True">
                                                                         <Setter Property="Visibility"
                                                                             Value="Visible" />
                                                                     </DataTrigger>
@@ -309,10 +326,11 @@
                     </Grid>
                 </Border>
                 <TextBlock Grid.Column="2"
-                       HorizontalAlignment="Right"
+                           HorizontalAlignment="Right"
                            VerticalAlignment="Bottom"
-                       Foreground="White"
-                       Text="{Binding PlaybackState.Track.Duration}"/>
+                           Foreground="#BABABA"
+                           Margin="5,0"
+                           Text="{Binding PlaybackState.Track.Duration}" />
             </Grid>
             <!--<TextBlock Grid.Column=""
                        Grid.Row="2"

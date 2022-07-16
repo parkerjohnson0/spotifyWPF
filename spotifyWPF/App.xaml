@@ -4,8 +4,10 @@
              xmlns:controls="clr-namespace:spotifyWPF.View.Controls"
              xmlns:vm="clr-namespace:spotifyWPF.ViewModel"
              xmlns:conv="clr-namespace:spotifyWPF.ViewModel.Converters.Root"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:view="clr-namespace:spotifyWPF.View.Controls"
              xmlns:local="clr-namespace:spotifyWPF"
+             xmlns:behaviors="clr-namespace:spotifyWPF.View.Behaviors"
              StartupUri="View/RootWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -235,7 +237,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Thumb}">
                             <Border
-                                CornerRadius="1"
+                                CornerRadius="2"
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="1" />
@@ -333,7 +335,19 @@
                 </Style.Triggers>
             </Style>
             <DataTemplate x:Key="Playlist" DataType="{x:Type vm:DisplayVM}">
-                <ScrollViewer Background="#121212">
+                <ScrollViewer x:Name="ScrollBar" 
+                              Background="#121212">
+                    <!--<ScrollViewer.Resources>
+                        <Style TargetType="{x:Type ScrollBar}" >
+                            <Setter Property="Template" Value="{StaticResource VerticalScrollBar}"/>
+                            <Setter Property="ViewportSize" Value="100"/>
+                            <Style.Triggers>
+                                <Trigger Property="Orientation" Value="Vertical">
+                                    <Setter Property="Height" Value="40"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ScrollViewer.Resources>-->
                     <Grid Background="#121212">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="250" />
@@ -386,6 +400,7 @@
                         <Grid Grid.Row="1" Margin="0,20">
                             <ListView
                                 x:Name="lv"
+                                
                                 Padding="25,0"
                                 BorderThickness="0"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -393,11 +408,65 @@
                                 ScrollViewer.CanContentScroll="False"
                                 PreviewMouseWheel="Lv_OnPreviewMouseWheel"
                                 ItemsSource="{Binding SelectedPlaylistItem.SongsList}">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:LazyLoadListView />
+                                </i:Interaction.Behaviors>
                                 <ListView.Style>
                                     <Style TargetType="{x:Type ListView}">
                                         <Setter Property="Background" Value="#121212"></Setter>
                                     </Style>
                                 </ListView.Style>
+
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ListViewItem}">
+                                        <Setter Property="Foreground" Value="LightGray" />
+                                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                    <Grid x:Name="PlaylistRow">
+                                                        <GridViewRowPresenter
+                                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                            Width="Auto" Margin="0"
+                                                            Content="{TemplateBinding Content}">
+                                                        </GridViewRowPresenter>
+                                                        <Grid.InputBindings>
+                                                            <MouseBinding MouseAction="LeftClick"
+                                                                          Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                            AncestorType={x:Type UserControl }},Path=DataContext.SelectTrackCommand}"
+                                                                          CommandParameter="{Binding .}">
+
+                                                            </MouseBinding>
+                                                        </Grid.InputBindings>
+                                                    </Grid>
+                                                    <ControlTemplate.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding Active}" Value="False" />
+                                                                <Condition
+                                                                    Binding="{Binding RelativeSource={RelativeSource Self},Path=IsMouseOver}"
+                                                                    Value="True" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter TargetName="PlaylistRow" Property="Background"
+                                                                    Value="{StaticResource SpotifyHover}" />
+                                                            <!--<Setter TargetName="ItemPlay" 
+                                                                    Property="Visibility" Value="Visible"/>
+                                                            <Setter TargetName="ItemNumber" Property="Visibility" Value="Collapsed"/>-->
+
+                                                        </MultiDataTrigger>
+                                                        <DataTrigger Binding="{Binding Active}" Value="True">
+                                                            <Setter TargetName="PlaylistRow" Property="Background"
+                                                                    Value="#5a5a5a" />
+                                                        </DataTrigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
                                 <ListView.View>
                                     <GridView AllowsColumnReorder="False" x:Name="ListGrid">
 
@@ -412,8 +481,8 @@
                                                             <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
                                                                 <Border BorderBrush="#bbb7ca"
                                                                         BorderThickness="0,0,0,0.25">
-                                                                    <ContentPresenter HorizontalAlignment="Right"
-                                                                        Margin="0,0,15,0"
+                                                                    <ContentPresenter HorizontalAlignment="Center"
+                                                                        Margin="0,0,0,0"
                                                                         VerticalAlignment="Center" />
                                                                 </Border>
                                                             </ControlTemplate>
@@ -424,10 +493,54 @@
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <Border BorderBrush="Transparent" BorderThickness="3" Margin="-6,0">
-                                                        <TextBlock TextAlignment="Right" Margin="10,0"
-                                                                   TextTrimming="CharacterEllipsis"
-                                                                   Text="{Binding ListIndex}">
-                                                        </TextBlock>
+                                                        <Grid>
+                                                            <TextBlock TextAlignment="Center" Margin="0,0"
+                                                                       VerticalAlignment="Center"
+                                                                       x:Name="ItemNumber"
+                                                                       TextTrimming="CharacterEllipsis"
+                                                                       Text="{Binding ListIndex}">
+                                                                <TextBlock.Style>
+                                                                    <Style TargetType="{x:Type TextBlock}">
+                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Active}"
+                                                                                Value="True">
+                                                                                <Setter Property="Visibility"
+                                                                                    Value="Collapsed" />
+                                                                            </DataTrigger>
+                                                                            <DataTrigger
+                                                                                Binding="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=IsMouseOver}"
+                                                                                Value="True">
+                                                                                <Setter Property="Visibility"
+                                                                                    Value="Collapsed" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
+                                                            <Image Source="/View/Resources/Icons/play_white.png"
+                                                                   Width="20"
+                                                                   x:Name="ItemPlay">
+                                                                <Image.Style>
+                                                                    <Style TargetType="{x:Type Image}">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Active}"
+                                                                                Value="True">
+                                                                                <Setter Property="Visibility"
+                                                                                    Value="Visible" />
+                                                                            </DataTrigger>
+                                                                            <DataTrigger
+                                                                                Binding="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=IsMouseOver}"
+                                                                                Value="True">
+                                                                                <Setter Property="Visibility"
+                                                                                    Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Image.Style>
+                                                            </Image>
+                                                        </Grid>
                                                     </Border>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
@@ -437,13 +550,14 @@
                                                         Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Border BorderBrush="Transparent" BorderThickness="3" Margin="-6,0">
+                                                    <Border BorderBrush="Transparent" BorderThickness="3" Margin="0,0">
                                                         <Grid Margin="-6,0">
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="32" />
                                                                 <ColumnDefinition Width="*" />
                                                             </Grid.ColumnDefinitions>
-                                                            <Image Source="{Binding AlbumArt}" Width="32" Height="32" />
+                                                            <Image Source="{Binding AlbumArt}" Width="32" Height="32"
+                                                                   />
                                                             <Grid Grid.Column="1" Margin="10,0,0,0">
                                                                 <Grid.RowDefinitions>
                                                                     <RowDefinition />
@@ -485,11 +599,11 @@
                                                         Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Border BorderBrush="Transparent" BorderThickness="3" Margin="-6,0">
+                                                    <Border BorderBrush="Transparent" BorderThickness="3" Margin="0,0">
                                                         <TextBlock HorizontalAlignment="Stretch" Margin="-6,0"
                                                                    x:Name="AlbumText"
                                                                    TextTrimming="CharacterEllipsis" Padding="0,0,25,0"
-                                                                   VerticalAlignment="Stretch" Text="{Binding Album}">
+                                                                   VerticalAlignment="Center" Text="{Binding Album}">
                                                             <TextBlock.Style>
                                                                 <Style TargetType="{x:Type TextBlock}">
                                                                     <Style.Triggers>
@@ -516,9 +630,10 @@
                                                         Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Border BorderBrush="Transparent" BorderThickness="3" Margin="-6,0">
+                                                    <Border BorderBrush="Transparent" BorderThickness="3" Margin="0,0">
                                                         <TextBlock
                                                             Text="{Binding DateAdded, Converter={StaticResource DateConv}}"
+                                                            VerticalAlignment="Center"
                                                             Margin="-6,0" TextTrimming="CharacterEllipsis">
                                                         </TextBlock>
                                                     </Border>
@@ -530,8 +645,9 @@
                                                         Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Border BorderBrush="Transparent" BorderThickness="3" Margin="-6,0">
+                                                    <Border BorderBrush="Transparent" BorderThickness="3" Margin="0,0">
                                                         <TextBlock Text="{Binding Duration}" Margin="-6,0"
+                                                                   VerticalAlignment="Center"
                                                                    TextTrimming="CharacterEllipsis">
                                                         </TextBlock>
                                                     </Border>
@@ -540,55 +656,18 @@
                                         </GridViewColumn>
                                     </GridView>
                                 </ListView.View>
-                                <ListView.ItemContainerStyle>
-                                    <Style TargetType="{x:Type ListViewItem}">
-                                        <Setter Property="Foreground" Value="LightGray" />
-                                        <Setter Property="HorizontalAlignment" Value="Stretch" />
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                        <Setter Property="VerticalContentAlignment" Value="Stretch" />
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                    <Grid x:Name="PlaylistRow">
-                                                        <GridViewRowPresenter
-                                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                            Width="Auto" Margin="0"
-                                                            Content="{TemplateBinding Content}">
-                                                        </GridViewRowPresenter>
-                                                        <Grid.InputBindings>
-                                                            <MouseBinding MouseAction="LeftClick"
-                                                                          Command="{Binding RelativeSource={RelativeSource FindAncestor, 
-                                                            AncestorType={x:Type UserControl }},Path=DataContext.SelectTrackCommand}"
-                                                                          CommandParameter="{Binding .}">
 
-                                                            </MouseBinding>
-                                                        </Grid.InputBindings>
-                                                    </Grid>
-                                                    <ControlTemplate.Triggers>
-                                                        <MultiDataTrigger>
-                                                            <MultiDataTrigger.Conditions>
-                                                                <Condition Binding="{Binding Active}" Value="False" />
-                                                                <Condition
-                                                                    Binding="{Binding RelativeSource={RelativeSource Self},Path=IsMouseOver}"
-                                                                    Value="True" />
-                                                            </MultiDataTrigger.Conditions>
-                                                            <Setter TargetName="PlaylistRow" Property="Background"
-                                                                    Value="{StaticResource SpotifyHover}" />
-                                                        </MultiDataTrigger>
-                                                        <DataTrigger Binding="{Binding Active}" Value="True">
-                                                            <Setter TargetName="PlaylistRow" Property="Background"
-                                                                    Value="#5a5a5a" />
-                                                        </DataTrigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </ListView.ItemContainerStyle>
                             </ListView>
                         </Grid>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseWheel">
+                           <i:InvokeCommandAction Command="{Binding MouseScrollCommand}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     </Grid>
+                    <i:Interaction.Behaviors>
+                        <behaviors:ScrollIntoViewBehavior />
+                    </i:Interaction.Behaviors>
                 </ScrollViewer>
             </DataTemplate>
             <DataTemplate x:Key="Home" DataType="{x:Type vm:DisplayVM}">

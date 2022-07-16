@@ -79,6 +79,9 @@ namespace spotifyWPF.ViewModel
             AppState.RootTemplate = RootTemplate.Library;
         }
 
+        /// <summary>
+        /// Gets playlists of currently logged in users
+        /// </summary>
         private async Task GetPlaylists()
         {
             //TODO loop through endpoint calls until next is null in the response

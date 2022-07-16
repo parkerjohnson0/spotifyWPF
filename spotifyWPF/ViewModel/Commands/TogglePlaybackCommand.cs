@@ -17,7 +17,7 @@ public class TogglePlaybackCommand : ICommand
 
     public async void Execute(object? parameter)
     {
-        await _vm.StartPlayback();
+        await _vm.TogglePlayback();
     }
 
     public event EventHandler? CanExecuteChanged;

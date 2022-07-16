@@ -9,7 +9,9 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:controls="clr-namespace:spotifyWPF.View.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1280" >
+        Title="MainWindow" Height="720" Width="1280" 
+        MinWidth="800"
+        MinHeight="600">
     <i:Interaction.Triggers>
        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
            <i:InvokeCommandAction Command="{Binding MouseUpCommand}"
@@ -30,13 +32,14 @@
                 <RowDefinition Height="90" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="2*" MaxWidth="400" MinWidth="125" />
                 <ColumnDefinition Width="6*" />
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <controls:DisplayUC Grid.Column="1" />
             <controls:PlayerUC Grid.Row="1" Grid.ColumnSpan="3" Height="90" />
-            <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Left">
+            <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Left"
+                          >
                 <GridSplitter.Style>
                     <Style TargetType="{x:Type GridSplitter}">
                         <Setter Property="Background" Value="#121212"></Setter>
@@ -48,7 +51,8 @@
                     </Style>
                 </GridSplitter.Style>
             </GridSplitter>
-            <controls:NavUC Grid.Column="0" />
+            <controls:NavUC Grid.Column="0"
+                            />
             <controls:FriendsUC Grid.Column="2" />
         </Grid>
         <controls:AuthUC Height="100"

@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using Newtonsoft.Json.Linq;
 using spotifyWPF.Model.App;
 using spotifyWPF.Model.Player;
@@ -30,6 +31,14 @@ public class PlayerVM : ViewModelBase
         {
             _isPlaying = value;
             NotifyPropertyChanged();
+            //if (_isPlaying)
+            //{
+            //    _playbackTick.Start();
+            //}
+            //else
+            //{
+            //    _playbackTick.Stop();
+            //}
         }
     }
 
@@ -77,9 +86,14 @@ public class PlayerVM : ViewModelBase
     public MuteVolumeCommand MuteVolumeCommand { get; set; }
 
     public TogglePlaybackCommand TogglePlaybackCommand { get; set; }
-
+    public NextSongCommand NextSongCommand { get; set; }
+    public PreviousSongCommand PreviousSongCommand { get; set; }
+    //private DispatcherTimer _playbackTick { get; set; }
     public PlayerVM()
     {
+        //_playbackTick = new DispatcherTimer();
+        //_playbackTick.Tick += (sender, args) => PlaybackState.ProgressMS += 1000;
+        //_playbackTick.Interval = new TimeSpan(0, 0, 1);
         if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
         {
             _playbackState = new PlaybackState()
@@ -107,12 +121,21 @@ public class PlayerVM : ViewModelBase
         ToggleDeviceControlCommand = new ToggleDeviceControlCommand(this);
         MuteVolumeCommand = new MuteVolumeCommand(this);
         VolumeSliderCommand = new VolumeSliderCommand(this);
+        NextSongCommand = new NextSongCommand(this);
+        PreviousSongCommand = new PreviousSongCommand(this);
         //    AppState.OnAuthorized += PlayerVMAuthorized;
     }
 
     private void UpdatePlaybackState(object? sender, EventArgs e)
     {
         PlaybackState = AppState.PlaybackState;
+        PlaybackState.OnSongEnd += OnSongEnd;
+
+    }
+
+    private void OnSongEnd(object? sender, EventArgs e)
+    {
+        AppState.GetPlaybackState();
     }
 
     private async void PlayerVMAuthorized(object? sender, EventArgs e)
@@ -157,7 +180,7 @@ public class PlayerVM : ViewModelBase
         AppState.DeviceControlVisibility = state == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
     }
 
-    public async Task<bool> StartPlayback()
+    public async Task<bool> TogglePlayback()
     {
         string url = PlaybackState.IsPlaying ? _pausePlaybackUrl : _startPlaybackUrl;
         HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Put, url + AppState.SelectedDevice.ID);

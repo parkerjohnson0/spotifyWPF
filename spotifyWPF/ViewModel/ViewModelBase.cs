@@ -11,6 +11,7 @@ using System.Windows;
 using spotifyWPF.Model.App;
 using spotifyWPF.Model.Nav;
 using spotifyWPF.Model.Player;
+using spotifyWPF.ViewModel.SpotifyApi;
 
 namespace spotifyWPF.ViewModel
 {
@@ -47,6 +48,7 @@ namespace spotifyWPF.ViewModel
     //todo create authorized event that will trigger data fetching in view models?
     public class AppState : INotifyPropertyChanged
     {
+        public SpotifyRequest SpotifyRequest { get; set; }
         public event EventHandler OnAuthorized;
         public event EventHandler OnPlaylistDataUpdated;
         public event EventHandler OnDeviceControlClicked;
@@ -150,6 +152,7 @@ namespace spotifyWPF.ViewModel
             set
             {
                 _accessToken = value;
+                SpotifyRequest = new SpotifyRequest(_accessToken);
                 NotifyPropertyChanged();
             }
         }
@@ -169,5 +172,9 @@ namespace spotifyWPF.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public async void GetPlaybackState()
+        {
+            PlaybackState = await SpotifyRequest.GetPlaybackState();
+        }
     }
 }
