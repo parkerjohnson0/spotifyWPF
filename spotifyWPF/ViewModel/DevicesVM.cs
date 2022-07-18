@@ -135,7 +135,7 @@ public class DevicesVM : ViewModelBase
                 Title = obj.SelectToken("item.name").ToString(),
                 AlbumArt = obj.SelectToken("item.album.images[0].url").ToString(),
                 DurationMS = long.Parse(obj.SelectToken("item.duration_ms").ToString()),
-                ID = obj.SelectToken("item.id").ToString()
+                SpotifyID = obj.SelectToken("item.id").ToString()
             },
             RepeatState = (RepeatState) Enum.Parse(typeof(RepeatState), obj.SelectToken("repeat_state").ToString()),
             ShuffleState = Boolean.Parse(obj.SelectToken("shuffle_state").ToString()),

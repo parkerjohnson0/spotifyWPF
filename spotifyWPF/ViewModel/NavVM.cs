@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Newtonsoft.Json.Linq;
+using spotifyWPF.LocalDatabase;
 using spotifyWPF.Model.App;
 
 namespace spotifyWPF.ViewModel
@@ -27,6 +28,7 @@ namespace spotifyWPF.ViewModel
         public SearchCommand SearchCommand { get; set; }
         public SelectPlaylistCommand SelectPlaylistCommand { get; set; }
         public ObservableCollection<PlaylistItem> PlaylistItems {get;set;}
+        private LocalCache _cache; 
 
         public bool Authorized
         {
@@ -36,9 +38,11 @@ namespace spotifyWPF.ViewModel
         public NavVM()
         {
             CreateButtons();
+            _cache = LocalCache.Instance;
             SelectPlaylistCommand = new SelectPlaylistCommand(this); 
             AppState.OnAuthorized += NavVMAuthorized;
             PlaylistItems = new ObservableCollection<PlaylistItem>();
+            
         }
 
         private async void NavVMAuthorized(object? sender, EventArgs e)
@@ -91,16 +95,21 @@ namespace spotifyWPF.ViewModel
             JObject obj = JObject.Parse(resp.Content.ReadAsStringAsync().Result);
             foreach (JToken item in obj["items"])
             {
-                PlaylistItems.Add(new PlaylistItem()
+                PlaylistItem playlist = new PlaylistItem()
                 {
-                  Description = item["description"].ToString(),
-                  Image = item.SelectToken("images[0].url")?.ToString(),
-                  Name = item["name"].ToString(),
-                  Owner = item.SelectToken("owner.display_name").ToString(),
-                  Link = item.SelectToken("tracks.href").ToString(),
-                  SongsList = new ObservableCollection<Track>()
-                });    
+
+                    Description = item["description"].ToString() ?? "",
+                    Image = item.SelectToken("images[0].url")?.ToString() ?? "",
+                    Name = item["name"].ToString() ?? "",
+                    Owner = item.SelectToken("owner.display_name").ToString() ?? "",
+                    Link = item.SelectToken("tracks.href").ToString(),
+                    SongsList = new ObservableCollection<Track>(),
+                    SpotifyID = item.SelectToken("id").ToString(),
+                    Length = (int)item.SelectToken("tracks.total")
+                };
+                PlaylistItems.Add(playlist); 
             }
+            _cache.Cache(PlaylistItems.ToList());
         }
         public void SelectPlaylist(PlaylistItem item)
         {

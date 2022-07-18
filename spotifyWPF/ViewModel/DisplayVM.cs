@@ -11,8 +11,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media.Effects;
 using System.Windows.Threading;
-using LocalDatabase;
 using Newtonsoft.Json.Linq;
+using spotifyWPF.LocalDatabase;
 using spotifyWPF.Model.Nav;
 using spotifyWPF.ViewModel.Commands;
 using Track = spotifyWPF.Model.App.Track;
@@ -65,6 +65,8 @@ namespace spotifyWPF.ViewModel
             }
         }
 
+        private List<Track> _trackCache = new List<Track>();
+
         public SelectTrackCommand SelectTrackCommand { get; set; }
         public MouseScrollCommand MouseScrollCommand { get; set; }
 
@@ -84,10 +86,11 @@ namespace spotifyWPF.ViewModel
         private async void SelectedPlaylistItemChanged(object? sender, EventArgs e)
         {
             SelectedPlaylistItem = AppState.SelectedPlaylistItem;
+            _currOffset = 0;
             if (SelectedPlaylistItem.SongsList.Count == 0)
             {
                 //_tempTracks.Clear();
-                await GetTracks(SelectedPlaylistItem.Link, 0,100);
+                await GetTracks(SelectedPlaylistItem.Link);
                 //foreach (Track track in _tempTracks.Take(50))
                 //{
                 //    SelectedPlaylistItem.SongsList.Add(track);
@@ -99,45 +102,87 @@ namespace spotifyWPF.ViewModel
 
         //private ObservableCollection<Track> _tempTracks = new ObservableCollection<Track>();
 
-        private async Task GetTracks(string apiUrl, int offset, int limit)
+        private async Task GetTracks(string apiUrl)
         {
-            HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, apiUrl + $"?offset={offset}&limit={limit}");
+            HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, apiUrl);
             req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AppState.AccessToken);
             HttpResponseMessage resp = await HttpClient.SendAsync(req);
             JObject obj = JObject.Parse(resp.Content.ReadAsStringAsync().Result);
             foreach (JToken item in obj["items"])
             {
-                SelectedPlaylistItem.SongsList.Add(new Track()
+                Track track = new Track()
                 {
-                    Artist = item.SelectToken("track.album.artists[0].name")?.ToString(),
-                    Album = item.SelectToken("track.album.name")?.ToString(),
-                    Title = item.SelectToken("track.name")?.ToString(),
-                    AlbumArt = item.SelectToken("track.album.images[0].url")?.ToString(),
+                    Artist = item.SelectToken("track.album.artists[0].name")?.ToString() ?? "",
+                    Album = item.SelectToken("track.album.name")?.ToString() ?? "",
+                    Title = item.SelectToken("track.name")?.ToString() ?? "",
+                    AlbumArt = item.SelectToken("track.album.images[0].url")?.ToString() ?? "",
                     DateAdded = DateTime.Parse(item.SelectToken("added_at")?.ToString()),
-                    ListIndex = ++offset,
+                    ListIndex = SelectedPlaylistItem.SongsList.Count + 1,
                     DurationMS = (long)item.SelectToken("track.duration_ms"),
-                    ID = item.SelectToken("track.id").ToString()
-                });
+                    SpotifyID = item.SelectToken("track.id").ToString(),
+                    PlaylistID = SelectedPlaylistItem.SpotifyID
+                };
+                SelectedPlaylistItem.SongsList.Add(track);
+                _trackCache.Add(track);
             }
-            
-            if (SelectedPlaylistItem.SongsList.Count > limit)
-            {
-                RemoveFromStart(limit);
-            }
+           // if (SelectedPlaylistItem.SongsList.Count > limit)
+           // {
+           //     RemoveFromStart(limit);
+           // }
 
-            _currOffset = offset;
+           // _currOffset = offset;
             // foreach (Track track in _tempTracks.Take(new Range(SelectedPlaylistItem.SongsList.Count, SelectedPlaylistItem.SongsList.Count+50)))
             // {
             //     SelectedPlaylistItem.SongsList.Add(track);
             // }
-            //string next;
-            //if ((next = obj.SelectToken("next")?.ToString()) != String.Empty)
-            //{
-            //    await Task.Delay(500);
-            //    await GetTracks(next);
-            //}
+            string next;
+            if ((next = obj.SelectToken("next")?.ToString()) != String.Empty)
+            {
+                 await Task.Delay(500);
+                Task.Run(()=>CachePlaylist(next));
+                // await GetTracks(next);
+            }
         }
 
+        private async void CachePlaylist(string api)
+        {
+            
+            HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, api);
+            req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AppState.AccessToken);
+            HttpResponseMessage resp = await HttpClient.SendAsync(req);
+            JObject obj = JObject.Parse(resp.Content.ReadAsStringAsync().Result);
+            foreach (JToken item in obj["items"])
+            {
+                Track track = new Track()
+                {
+                    Artist = item.SelectToken("track.album.artists[0].name")?.ToString() ?? "",
+                    Album = item.SelectToken("track.album.name")?.ToString() ?? "",
+                    Title = item.SelectToken("track.name")?.ToString() ?? "",
+                    AlbumArt = item.SelectToken("track.album.images[0].url")?.ToString() ?? "",
+                    DateAdded = DateTime.Parse(item.SelectToken("added_at")?.ToString()),
+                    ListIndex = _trackCache.Count + 1,
+                    DurationMS = (long)item.SelectToken("track.duration_ms"),
+                    SpotifyID = item.SelectToken("track.id").ToString(),
+                    PlaylistID = SelectedPlaylistItem.SpotifyID
+                };
+                _trackCache.Add(track);
+            }
+
+            string next;
+            if ((next = obj.SelectToken("next")?.ToString()) != String.Empty)
+            {
+                await Task.Delay(100);
+                Task.Run(()=>CachePlaylist(next));
+                // await GetTracks(next);
+            }
+            //should only run once playlist has been completely cached in memory.
+            //save to sqlite
+            else
+            {
+                _cache.Cache(_trackCache);
+                _trackCache.Clear();
+            }
+        }
         private void RemoveFromStart(int limit)
         {
             for (int i = 0; i < limit; i++)
@@ -172,7 +217,20 @@ namespace spotifyWPF.ViewModel
 
         public async Task LoadSongs()
         {
-            await GetTracks(SelectedPlaylistItem.Link, _currOffset, 25);
+            _currOffset += 10;
+            List<Track> cachedTracks = await _cache.Load(_currOffset,SelectedPlaylistItem.SpotifyID,10);
+            await Task.Run(() =>
+            {
+                foreach (Track track in cachedTracks)
+                {
+                    App.Current.Dispatcher.BeginInvoke(new Action(()=>
+                    {
+                        SelectedPlaylistItem.SongsList.Add(track);
+                        SelectedPlaylistItem.SongsList.RemoveAt(0);
+                    }));
+                }
+            });
+            //await GetTracks(SelectedPlaylistItem.Link);
         }
     }
 }
