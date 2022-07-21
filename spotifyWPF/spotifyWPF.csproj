@@ -113,13 +113,13 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <Content Include="View\Resources\Icons\search_clicked.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <Content Include="View\Resources\Icons\search_unclicked.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <Content Include="View\Resources\Icons\search_unclicked_alt.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <None Remove="View\Resources\Icons\devices_clicked.png" />
       <None Remove="View\Resources\Icons\devices_unclicked.png" />
@@ -208,6 +208,14 @@
       </Content>
       <None Remove="View\Resources\Icons\pause_white.png" />
       <Content Include="View\Resources\Icons\pause_white.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\repeat_green_once.png" />
+      <Content Include="View\Resources\Icons\repeat_green_once.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="View\Resources\Icons\repeat_green_once_alt.png" />
+      <Content Include="View\Resources\Icons\repeat_green_once_alt.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>

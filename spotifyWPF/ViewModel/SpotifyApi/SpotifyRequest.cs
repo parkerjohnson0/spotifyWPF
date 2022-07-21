@@ -20,6 +20,7 @@ public class SpotifyRequest
     }
     private  string _playerUrl = "https://api.spotify.com/v1/me/player/";
     private string _shufflePlaybackUrl = "https://api.spotify.com/v1/me/player/shuffle?state=";
+    private string _changeRepeatStateUrl = "https://api.spotify.com/v1/me/player/repeat?state=";
     private  HttpClient _httpClient = new HttpClient();
     public async Task<PlaybackState> GetPlaybackState()
     {
@@ -115,5 +116,31 @@ public class SpotifyRequest
     public async Task ResumeSong(Track track, Device selectedDevice, long progress)
     {
         await ToggleSong(track, selectedDevice, "play", progress);
+    }
+
+    public async Task<bool> ToggleShuffle(bool shuffleState)
+    {
+        //pass in flipped bool
+        string url = _shufflePlaybackUrl + $"{!shuffleState}";
+        HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Put, url);
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+        HttpResponseMessage resp = await _httpClient.SendAsync(req);
+        //if successful, flip isplaying
+        return resp.StatusCode == HttpStatusCode.NoContent;
+    }
+    
+    /// <summary>
+    /// Pass in current state, then increments
+    /// </summary>
+    /// <param name="currRepeatState"></param>
+    /// <returns></returns>
+    public async Task<bool> ChangeRepeatState(RepeatState currRepeatState)
+    {
+        RepeatState nextState = (RepeatState) (((int)currRepeatState + 1) % Enum.GetNames(typeof(RepeatState)).Length); 
+        string url = _changeRepeatStateUrl + nextState;
+        HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Put, url);
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+        HttpResponseMessage resp = await _httpClient.SendAsync(req);
+        return resp.StatusCode == HttpStatusCode.NoContent;
     }
 }

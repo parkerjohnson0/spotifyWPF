@@ -211,9 +211,11 @@ namespace spotifyWPF.ViewModel
             await GetPlaybackState();
         }
 
-        public async Task<bool> ToggleShuffle()
+        public async Task ToggleShuffle()
         {
-            throw new NotImplementedException();
+            await SpotifyRequest.ToggleShuffle(PlaybackState.ShuffleState);
+            await Task.Delay(200);
+            await GetPlaybackState();
         }
     }
 }

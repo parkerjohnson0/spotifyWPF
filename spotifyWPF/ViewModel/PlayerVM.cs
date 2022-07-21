@@ -88,7 +88,8 @@ public class PlayerVM : ViewModelBase
     public TogglePlaybackCommand TogglePlaybackCommand { get; set; }
     public NextSongCommand NextSongCommand { get; set; }
     public PreviousSongCommand PreviousSongCommand { get; set; }
-    public ShufflePlayerCommand
+    public ShufflePlayerCommand ShufflePlayerCommand { get; set; }
+    public ChangeRepeatStateCommand ChangeRepeatStateCommand { get; set; }
     //private DispatcherTimer _playbackTick { get; set; }
     public PlayerVM()
     {
@@ -124,6 +125,8 @@ public class PlayerVM : ViewModelBase
         VolumeSliderCommand = new VolumeSliderCommand(this);
         NextSongCommand = new NextSongCommand(this);
         PreviousSongCommand = new PreviousSongCommand(this);
+        ShufflePlayerCommand = new ShufflePlayerCommand(this);
+        ChangeRepeatStateCommand = new ChangeRepeatStateCommand(this);
         //    AppState.OnAuthorized += PlayerVMAuthorized;
     }
 
@@ -195,8 +198,9 @@ public class PlayerVM : ViewModelBase
         return resp.StatusCode == HttpStatusCode.NoContent;
     }
 
-    public async Task<bool> ToggleShuffle()
+    public async Task ToggleShuffle()
     {
-        PlaybackState.ShuffleState = await AppState.ToggleShuffle();
+        //PlaybackState.ShuffleState = await AppState.ToggleShuffle();
+        await AppState.ToggleShuffle();
     }
 }
