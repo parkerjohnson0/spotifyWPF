@@ -12,9 +12,9 @@ public static class Queries
        //       $"'{track.Title}','{track.Artist}','{track.Album}','{track.AlbumArt}'," +
        //       $"{track.DateAdded},{track.ListIndex},{track.DurationMS});";
        return "INSERT INTO Tracks (SpotifyID,PlaylistID, Title, Artist, Album,AlbumArt," +
-              "DateAdded,ListIndex,DurationMS) VALUES ($SpotifyID,$PlaylistID," +
+              "DateAdded,ContextPosition,DurationMS) VALUES ($SpotifyID,$PlaylistID," +
               "$Title,$Artist,$Album,$AlbumArt," +
-              "$DateAdded,$ListIndex,$DurationMS);";
+              "$DateAdded,$ContextPosition,$DurationMS);";
    }
 
    public static string GetInsertPlaylist(PlaylistItem playlist)
@@ -26,7 +26,7 @@ public static class Queries
    }
    public static string GetSelectNextTracks(int index, string playlistID,int amount)
    {
-       return $"SELECT * FROM TRACKS WHERE ListIndex>{index} AND ListIndex<{index + amount} AND " +
+       return $"SELECT * FROM TRACKS WHERE ContextPosition>{index} AND ContextPosition<={index + amount} AND " +
               $"PlaylistID='{playlistID}';";
    }
 }

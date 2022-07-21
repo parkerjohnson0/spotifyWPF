@@ -15,13 +15,16 @@ using Newtonsoft.Json.Linq;
 using spotifyWPF.LocalDatabase;
 using spotifyWPF.Model.Nav;
 using spotifyWPF.ViewModel.Commands;
+using spotifyWPF.ViewModel.SpotifyApi;
 using Track = spotifyWPF.Model.App.Track;
 
 namespace spotifyWPF.ViewModel
 {
+    //todo rename displayVM to playlistVM
     public class DisplayVM : ViewModelBase
     {
         private int _currOffset;
+        private int _amountPerScroll = 10;
         private BlurEffect _winBlur;
         private LocalCache _cache;
         public BlurEffect WinBlur
@@ -29,7 +32,6 @@ namespace spotifyWPF.ViewModel
             get { return _winBlur; }
             set { _winBlur = value; }
         }
-
         private Track _selectedTrack;
 
         public Track SelectedTrack
@@ -69,10 +71,12 @@ namespace spotifyWPF.ViewModel
 
         public SelectTrackCommand SelectTrackCommand { get; set; }
         public MouseScrollCommand MouseScrollCommand { get; set; }
+        public PlayTrackCommand PlayTrackCommand { get; set; }
 
         public DisplayVM()
         {
             MouseScrollCommand = new MouseScrollCommand(this);
+            PlayTrackCommand = new PlayTrackCommand(this);
             SelectTrackCommand = new SelectTrackCommand(this);
             AppState.OnAuthorized += RootVMAuthorized;
             AppState.OnPlaylistDataUpdated += SelectedPlaylistItemChanged;
@@ -86,11 +90,11 @@ namespace spotifyWPF.ViewModel
         private async void SelectedPlaylistItemChanged(object? sender, EventArgs e)
         {
             SelectedPlaylistItem = AppState.SelectedPlaylistItem;
-            _currOffset = 0;
             if (SelectedPlaylistItem.SongsList.Count == 0)
             {
                 //_tempTracks.Clear();
                 await GetTracks(SelectedPlaylistItem.Link);
+                _currOffset = SelectedPlaylistItem.SongsList.Count - _amountPerScroll;
                 //foreach (Track track in _tempTracks.Take(50))
                 //{
                 //    SelectedPlaylistItem.SongsList.Add(track);
@@ -117,10 +121,10 @@ namespace spotifyWPF.ViewModel
                     Title = item.SelectToken("track.name")?.ToString() ?? "",
                     AlbumArt = item.SelectToken("track.album.images[0].url")?.ToString() ?? "",
                     DateAdded = DateTime.Parse(item.SelectToken("added_at")?.ToString()),
-                    ListIndex = SelectedPlaylistItem.SongsList.Count + 1,
+                    ContextPosition = SelectedPlaylistItem.SongsList.Count + 1,
                     DurationMS = (long)item.SelectToken("track.duration_ms"),
                     SpotifyID = item.SelectToken("track.id").ToString(),
-                    PlaylistID = SelectedPlaylistItem.SpotifyID
+                    PlaylistID = SelectedPlaylistItem.SpotifyID,
                 };
                 SelectedPlaylistItem.SongsList.Add(track);
                 _trackCache.Add(track);
@@ -160,10 +164,10 @@ namespace spotifyWPF.ViewModel
                     Title = item.SelectToken("track.name")?.ToString() ?? "",
                     AlbumArt = item.SelectToken("track.album.images[0].url")?.ToString() ?? "",
                     DateAdded = DateTime.Parse(item.SelectToken("added_at")?.ToString()),
-                    ListIndex = _trackCache.Count + 1,
+                    ContextPosition = _trackCache.Count + 1,
                     DurationMS = (long)item.SelectToken("track.duration_ms"),
                     SpotifyID = item.SelectToken("track.id").ToString(),
-                    PlaylistID = SelectedPlaylistItem.SpotifyID
+                    PlaylistID = SelectedPlaylistItem.SpotifyID,
                 };
                 _trackCache.Add(track);
             }
@@ -217,20 +221,29 @@ namespace spotifyWPF.ViewModel
 
         public async Task LoadSongs()
         {
-            _currOffset += 10;
-            List<Track> cachedTracks = await _cache.Load(_currOffset,SelectedPlaylistItem.SpotifyID,10);
+            _currOffset += _amountPerScroll;
+            List<Track> cachedTracks = await _cache.Load(_currOffset,SelectedPlaylistItem.SpotifyID,_amountPerScroll);
             await Task.Run(() =>
             {
                 foreach (Track track in cachedTracks)
                 {
                     App.Current.Dispatcher.BeginInvoke(new Action(()=>
                     {
-                        SelectedPlaylistItem.SongsList.Add(track);
                         SelectedPlaylistItem.SongsList.RemoveAt(0);
+                        SelectedPlaylistItem.SongsList.Add(track);
                     }));
                 }
             });
             //await GetTracks(SelectedPlaylistItem.Link);
+        }
+
+        public void PlaySelectedTrack(Track track)
+        {
+            AppState.PlaySong(track);
+        }
+        public void PauseSelectedTrack(Track track)
+        {
+            AppState.PauseSong(track);
         }
     }
 }

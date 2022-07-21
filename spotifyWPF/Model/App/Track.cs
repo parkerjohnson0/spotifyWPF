@@ -6,6 +6,7 @@ namespace spotifyWPF.Model.App;
 
 public class Track  : INotifyPropertyChanged
 {
+   
     public string SpotifyID { get; set; }
    public string Title { get; set; } 
    public string Artist { get; set; }
@@ -34,7 +35,7 @@ public class Track  : INotifyPropertyChanged
       }
    }
    public DateTime DateAdded { get; set; }
-   public int ListIndex { get; set; }
+   public int ContextPosition { get; set; }
    public string PlaylistID { get; set; }
 
    public event PropertyChangedEventHandler? PropertyChanged;

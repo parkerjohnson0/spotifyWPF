@@ -3,19 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:spotifyWPF.View.Controls"
              xmlns:vm="clr-namespace:spotifyWPF.ViewModel"
-             xmlns:conv="clr-namespace:spotifyWPF.ViewModel.Converters.Root"
+             xmlns:convRoot="clr-namespace:spotifyWPF.ViewModel.Converters.Root"
+             xmlns:convPlaylist="clr-namespace:spotifyWPF.ViewModel.Converters.Playlist"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:types="clr-namespace:spotifyWPF.Model"
              xmlns:view="clr-namespace:spotifyWPF.View.Controls"
              xmlns:local="clr-namespace:spotifyWPF"
              xmlns:behaviors="clr-namespace:spotifyWPF.View.Behaviors"
+             xmlns:app="clr-namespace:spotifyWPF.Model.App"
              StartupUri="View/RootWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <DataTemplate DataType="{x:Type vm:DevicesVM}">
                 <view:DevicesUC />
             </DataTemplate>
-            <conv:DateConverter x:Key="DateConv" />
-            <conv:ColumnWidthConverter x:Key="ColumnWidthConv" />
+            <convRoot:DateConverter x:Key="DateConv" />
+            <convRoot:ColumnWidthConverter x:Key="ColumnWidthConv" />
+            <convPlaylist:SongPlaybackStateConverter x:Key="SongPlaybackStateConverter" />
+            <convPlaylist:SongPlaybackStatePauseConverter x:Key="SongPlaybackStatePauseConverter" />
+            <convPlaylist:SongPlaybackStateHoverConverter x:Key="SongPlaybackStateHoverConverter" />
             <SolidColorBrush x:Key="SpotifyHover">#2A2A2A</SolidColorBrush>
             <!-- Fill Brushes -->
             <LinearGradientBrush x:Key="NormalBrush" StartPoint="0,0" EndPoint="0,1">
@@ -335,7 +341,7 @@
                 </Style.Triggers>
             </Style>
             <DataTemplate x:Key="Playlist" DataType="{x:Type vm:DisplayVM}">
-                <ScrollViewer x:Name="ScrollBar" 
+                <ScrollViewer x:Name="ScrollBar"
                               Background="#121212">
                     <!--<ScrollViewer.Resources>
                         <Style TargetType="{x:Type ScrollBar}" >
@@ -400,7 +406,6 @@
                         <Grid Grid.Row="1" Margin="0,20">
                             <ListView
                                 x:Name="lv"
-                                
                                 Padding="25,0"
                                 BorderThickness="0"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -419,6 +424,7 @@
 
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="{x:Type ListViewItem}">
+                                        <Setter Property="FocusVisualStyle" Value="{StaticResource PlaylistItemFocus}"/>
                                         <Setter Property="Foreground" Value="LightGray" />
                                         <Setter Property="HorizontalAlignment" Value="Stretch" />
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -437,9 +443,12 @@
                                                             <MouseBinding MouseAction="LeftClick"
                                                                           Command="{Binding RelativeSource={RelativeSource FindAncestor, 
                                                             AncestorType={x:Type UserControl }},Path=DataContext.SelectTrackCommand}"
-                                                                          CommandParameter="{Binding .}">
+                                                                          CommandParameter="{Binding .}" />
 
-                                                            </MouseBinding>
+                                                            <MouseBinding MouseAction="LeftDoubleClick"
+                                                                          Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                            AncestorType={x:Type UserControl }},Path=DataContext.PlayTrackCommand}"
+                                                                          CommandParameter="{Binding .}" />
                                                         </Grid.InputBindings>
                                                     </Grid>
                                                     <ControlTemplate.Triggers>
@@ -498,11 +507,24 @@
                                                                        VerticalAlignment="Center"
                                                                        x:Name="ItemNumber"
                                                                        TextTrimming="CharacterEllipsis"
-                                                                       Text="{Binding ListIndex}">
+                                                                       Text="{Binding ContextPosition}">
                                                                 <TextBlock.Style>
                                                                     <Style TargetType="{x:Type TextBlock}">
                                                                         <Setter Property="Visibility" Value="Visible" />
                                                                         <Style.Triggers>
+                                                                            <DataTrigger Value="True">
+                                                                                <DataTrigger.Binding>
+                                                                                    <MultiBinding
+                                                                                        Converter="{StaticResource SongPlaybackStateConverter}">
+                                                                                        <Binding Path="." />
+                                                                                        <Binding
+                                                                                            RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type UserControl}}"
+                                                                                            Path="DataContext.AppState.PlaybackState.Track" />
+                                                                                    </MultiBinding>
+                                                                                </DataTrigger.Binding>
+                                                                                <Setter Property="Foreground"
+                                                                                    Value="#1bae46" />
+                                                                            </DataTrigger>
                                                                             <DataTrigger Binding="{Binding Active}"
                                                                                 Value="True">
                                                                                 <Setter Property="Visibility"
@@ -518,11 +540,13 @@
                                                                     </Style>
                                                                 </TextBlock.Style>
                                                             </TextBlock>
-                                                            <Image Source="/View/Resources/Icons/play_white.png"
-                                                                   Width="20"
-                                                                   x:Name="ItemPlay">
+                                                            <Image
+                                                                Width="20"
+                                                                x:Name="ItemPlay">
                                                                 <Image.Style>
                                                                     <Style TargetType="{x:Type Image}">
+                                                                        <Setter Property="Source"
+                                                                            Value="/View/Resources/Icons/play_white.png" />
                                                                         <Setter Property="Visibility" Value="Collapsed" />
                                                                         <Style.Triggers>
                                                                             <DataTrigger Binding="{Binding Active}"
@@ -536,9 +560,32 @@
                                                                                 <Setter Property="Visibility"
                                                                                     Value="Visible" />
                                                                             </DataTrigger>
+                                                                            <DataTrigger Value="True">
+                                                                                <DataTrigger.Binding>
+                                                                                    <MultiBinding
+                                                                                        Converter="{StaticResource SongPlaybackStatePauseConverter}">
+                                                                                        <Binding Path="." />
+                                                                                        <Binding
+                                                                                            RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type UserControl}}"
+                                                                                            Path="DataContext.AppState.PlaybackState.Track"
+                                                                                            UpdateSourceTrigger="PropertyChanged" />
+                                                                                        <Binding
+                                                                                            RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type UserControl}}"
+                                                                                            Path="DataContext.AppState.PlaybackState.IsPlaying"/>
+                                                                                    </MultiBinding>
+                                                                                </DataTrigger.Binding>
+                                                                                <Setter Property="Source"
+                                                                                    Value="/View/Resources/Icons/pause_white.png" />
+                                                                            </DataTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
                                                                 </Image.Style>
+                                                                <Image.InputBindings>
+                                                                    <MouseBinding MouseAction="LeftClick"
+                                                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                            AncestorType={x:Type UserControl }},Path=DataContext.PlayTrackCommand}"
+                                                                        CommandParameter="{Binding .}" />
+                                                                </Image.InputBindings>
                                                             </Image>
                                                         </Grid>
                                                     </Border>
@@ -549,23 +596,57 @@
                                                         HeaderContainerStyle="{StaticResource PlaylistGrid}"
                                                         Width="{Binding ElementName=lv,Path=ActualWidth, Converter={StaticResource ColumnWidthConv}, ConverterParameter=4}">
                                             <GridViewColumn.CellTemplate>
-                                                <DataTemplate>
+                                                <DataTemplate DataType="{x:Type app:Track}">
                                                     <Border BorderBrush="Transparent" BorderThickness="3" Margin="0,0">
                                                         <Grid Margin="-6,0">
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="32" />
                                                                 <ColumnDefinition Width="*" />
                                                             </Grid.ColumnDefinitions>
-                                                            <Image Source="{Binding AlbumArt}" Width="32" Height="32"
-                                                                   />
+                                                            <Image Source="{Binding AlbumArt}" Width="32" Height="32" />
                                                             <Grid Grid.Column="1" Margin="10,0,0,0">
                                                                 <Grid.RowDefinitions>
                                                                     <RowDefinition />
                                                                     <RowDefinition />
                                                                 </Grid.RowDefinitions>
-                                                                <TextBlock Foreground="White" Text="{Binding Title}"
+                                                                <TextBlock Text="{Binding Title}"
+                                                                           x:Name="TitleText"
                                                                            Padding="0,0,25,0"
                                                                            TextTrimming="CharacterEllipsis">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="{x:Type TextBlock}">
+                                                                            <Setter Property="Foreground" Value="White" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Value="True">
+                                                                                    <DataTrigger.Binding>
+                                                                                        <MultiBinding
+                                                                                            Converter="{StaticResource SongPlaybackStateConverter}">
+                                                                                            <Binding Path="." />
+                                                                                            <Binding
+                                                                                                RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type UserControl}}"
+                                                                                                Path="DataContext.AppState.PlaybackState.Track" />
+                                                                                        </MultiBinding>
+                                                                                    </DataTrigger.Binding>
+                                                                                    <Setter Property="Foreground"
+                                                                                        Value="#1bae46" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Value="True">
+                                                                                    <DataTrigger.Binding>
+                                                                                        <MultiBinding
+                                                                                            Converter="{StaticResource SongPlaybackStateHoverConverter}">
+                                                                                            <Binding Path="." />
+                                                                                            <Binding
+                                                                                                RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type UserControl}}"
+                                                                                                Path="DataContext.AppState.PlaybackState" />
+                                                                                            <Binding Path="Active" />
+                                                                                        </MultiBinding>
+                                                                                    </DataTrigger.Binding>
+                                                                                    <Setter Property="Foreground"
+                                                                                        Value="#2acf5e" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
                                                                 </TextBlock>
                                                                 <TextBlock Grid.Row="1" Text="{Binding Artist}"
                                                                            TextTrimming="CharacterEllipsis">
@@ -659,11 +740,12 @@
 
                             </ListView>
                         </Grid>
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="MouseWheel">
-                           <i:InvokeCommandAction Command="{Binding MouseScrollCommand}" PassEventArgsToCommand="True"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseWheel">
+                                <i:InvokeCommandAction Command="{Binding MouseScrollCommand}"
+                                                       PassEventArgsToCommand="True" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </Grid>
                     <i:Interaction.Behaviors>
                         <behaviors:ScrollIntoViewBehavior />

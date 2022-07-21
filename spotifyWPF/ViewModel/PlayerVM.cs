@@ -88,6 +88,7 @@ public class PlayerVM : ViewModelBase
     public TogglePlaybackCommand TogglePlaybackCommand { get; set; }
     public NextSongCommand NextSongCommand { get; set; }
     public PreviousSongCommand PreviousSongCommand { get; set; }
+    public ShufflePlayerCommand
     //private DispatcherTimer _playbackTick { get; set; }
     public PlayerVM()
     {
@@ -194,4 +195,8 @@ public class PlayerVM : ViewModelBase
         return resp.StatusCode == HttpStatusCode.NoContent;
     }
 
+    public async Task<bool> ToggleShuffle()
+    {
+        PlaybackState.ShuffleState = await AppState.ToggleShuffle();
+    }
 }

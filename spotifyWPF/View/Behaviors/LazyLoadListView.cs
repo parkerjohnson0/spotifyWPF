@@ -41,7 +41,8 @@ public class LazyLoadListView : Behavior<ListView>
         //if within 25& of the top, unload from the end, load more to the beginning
         //find someway to trigger getting next tracks
        // if (AssociatedObject.Items.Count == 0) return;
-        double ratio = e.VerticalOffset / (sender as ScrollViewer).ScrollableHeight;
+       double currOffset = e.VerticalOffset;
+        double ratio = currOffset / (sender as ScrollViewer).ScrollableHeight;
         if (ratio > LOAD_TRIGGER_UPPER_BOUND && e.VerticalChange > 0
             && !_loading)
         {

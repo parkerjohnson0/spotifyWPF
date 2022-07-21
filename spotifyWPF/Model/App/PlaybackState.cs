@@ -12,6 +12,13 @@ public enum RepeatState
     context,
     track
 }
+public enum ContextType 
+{
+   none, 
+   playlist,
+   artist,
+   album
+}
 
 public class PlaybackState : INotifyPropertyChanged
 {
@@ -57,6 +64,13 @@ public class PlaybackState : INotifyPropertyChanged
         }
     }
 
+    private ContextType _contextType;
+
+    public ContextType ContextType
+    {
+        get { return _contextType; }
+        set { _contextType = value; NotifyPropertyChanged(); }
+    }
     private bool _shuffleState;
 
     public bool ShuffleState
@@ -109,7 +123,13 @@ public class PlaybackState : INotifyPropertyChanged
         }
     }
 
-    public Track Track { get; set; }
+    private Track _track;
+
+    public Track Track
+    {
+        get { return _track; }
+        set { _track = value;NotifyPropertyChanged(); }
+    }
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)

@@ -135,12 +135,13 @@ public class DevicesVM : ViewModelBase
                 Title = obj.SelectToken("item.name").ToString(),
                 AlbumArt = obj.SelectToken("item.album.images[0].url").ToString(),
                 DurationMS = long.Parse(obj.SelectToken("item.duration_ms").ToString()),
-                SpotifyID = obj.SelectToken("item.id").ToString()
+                SpotifyID = obj.SelectToken("item.id").ToString(),
+                PlaylistID = obj.SelectToken("context.uri") is null ? "" : obj.SelectToken("context.uri").ToString().Split(":")[2]
             },
             RepeatState = (RepeatState) Enum.Parse(typeof(RepeatState), obj.SelectToken("repeat_state").ToString()),
             ShuffleState = Boolean.Parse(obj.SelectToken("shuffle_state").ToString()),
-            ProgressMS = (long) obj.SelectToken("progress_ms")
-            
+            ProgressMS = (long) obj.SelectToken("progress_ms"),
+            ContextType = obj.SelectToken("context.type") is null ? ContextType.none :  (ContextType) Enum.Parse(typeof(ContextType),obj.SelectToken("context.type")?.ToString()),
         };
         return playbackState;
     }

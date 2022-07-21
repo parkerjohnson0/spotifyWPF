@@ -133,14 +133,31 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Image
                         Height="24">
+                        <i:Interaction.Triggers>
+                           <i:EventTrigger  Actions="MouseLeftButtonUp">
+                               <i:InvokeCommandAction Command="{Binding ShufflePlayerCommand}"/>
+                           </i:EventTrigger> 
+                        </i:Interaction.Triggers>
                         <Image.Style>
                             <Style TargetType="{x:Type Image}">
                                 <Setter Property="Image.Source" Value="/View/Resources/Icons/shuffle.png" />
                                 <Style.Triggers>
+                                    <DataTrigger Binding="{Binding PlaybackState.ShuffleState}"
+                                                 Value="True">
+                                        <Setter Property="Image.Source" Value="/View/Resources/Icons/shuffle_green.png"></Setter>
+                                    </DataTrigger>
                                     <Trigger Property="Image.IsMouseOver" Value="True">
                                         <Setter Property="Image.Source"
                                                 Value="/View/Resources/Icons/shuffle_alt.png" />
                                     </Trigger>
+                                   <MultiDataTrigger>
+                                       <MultiDataTrigger.Conditions>
+                                           <Condition Binding="{Binding PlaybackState.ShuffleState}" Value="True"/>
+                                          <Condition Binding="{Binding RelativeSource={RelativeSource Self},
+                                          Path=IsMouseOver}" Value="True"/> 
+                                       </MultiDataTrigger.Conditions>
+                                       <Setter Property="Image.Source" Value="/View/Resources/Icons/shuffle_green_alt.png"/>
+                                   </MultiDataTrigger> 
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>

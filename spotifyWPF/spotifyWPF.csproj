@@ -206,6 +206,10 @@
       <Content Include="View\Resources\Icons\pause.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+      <None Remove="View\Resources\Icons\pause_white.png" />
+      <Content Include="View\Resources\Icons\pause_white.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>

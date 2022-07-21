@@ -21,7 +21,7 @@ public class NextSongCommand :ICommand
     {
         if (await _vm.AppState.SpotifyRequest.NextSong())
         {
-            await Task.Delay(1000);
+            await Task.Delay(500);
            _vm.AppState.GetPlaybackState(); 
         }
     }

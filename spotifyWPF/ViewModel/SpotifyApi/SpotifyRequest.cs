@@ -2,7 +2,9 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using spotifyWPF.Model.App;
 using spotifyWPF.Model.Player;
@@ -17,6 +19,7 @@ public class SpotifyRequest
         _accessToken = accessToken;
     }
     private  string _playerUrl = "https://api.spotify.com/v1/me/player/";
+    private string _shufflePlaybackUrl = "https://api.spotify.com/v1/me/player/shuffle?state=";
     private  HttpClient _httpClient = new HttpClient();
     public async Task<PlaybackState> GetPlaybackState()
     {
@@ -41,11 +44,13 @@ public class SpotifyRequest
                 Title = obj.SelectToken("item.name").ToString(),
                 AlbumArt = obj.SelectToken("item.album.images[0].url").ToString(),
                 DurationMS = long.Parse(obj.SelectToken("item.duration_ms").ToString()),
-                SpotifyID = obj.SelectToken("item.id").ToString()
+                SpotifyID = obj.SelectToken("item.id").ToString(),
+                PlaylistID = obj.SelectToken("context.uri") is null ? "" : obj.SelectToken("context.uri").ToString().Split(":")[2]
             },
             RepeatState = (RepeatState)Enum.Parse(typeof(RepeatState), obj.SelectToken("repeat_state").ToString()),
             ShuffleState = Boolean.Parse(obj.SelectToken("shuffle_state").ToString()),
-            ProgressMS = (long)obj.SelectToken("progress_ms")
+            ProgressMS = (long)obj.SelectToken("progress_ms"),
+            ContextType = obj.SelectToken("context.type") is null ? ContextType.none :  (ContextType) Enum.Parse(typeof(ContextType),obj.SelectToken("context.type")?.ToString()),
         };
         return playbackState;
     }
@@ -67,5 +72,48 @@ public class SpotifyRequest
         HttpResponseMessage resp = await _httpClient.SendAsync(req);
         //if successful, flip isplaying
         return resp.StatusCode == HttpStatusCode.NoContent;
+    }
+
+    public async Task PlaySong(Track track, Device selectedDevice)
+    {
+        await ToggleSong(track, selectedDevice, "play", 0);
+    }
+
+    private async Task<bool> ToggleSong(Track track, Device selectedDevice, string endPoint, long position)
+    {
+        //if (!selectedDevice.IsActive) return false;
+        
+        string url = _playerUrl + $"{endPoint}?device_id={selectedDevice.ID}";
+        var body = new
+        {
+            //uris = new string[] { $"spotify:track:{track.SpotifyID}" },
+            context_uri = $"spotify:playlist:{track.PlaylistID}",
+            offset= new
+            {
+                //todo rename this to ContextPosition 
+                //todo will have to do this after figure out a different scheme for listing the numbers in each playlist listviewitem.
+               position=track.ContextPosition - 1 
+            },
+           position_ms = position 
+            
+        };
+        string json = System.Text.Json.JsonSerializer.Serialize(body);
+        
+        HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Put, url);
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+        req.Content = new StringContent(json, Encoding.UTF8, "application/json");
+        HttpResponseMessage resp = await _httpClient.SendAsync(req);
+        //if successful, flip isplaying
+        return resp.StatusCode == HttpStatusCode.NoContent;
+    }
+
+    public async Task PauseSong(Track track, Device selectedDevice)
+    {
+        await ToggleSong(track, selectedDevice, "pause", 0);
+    }
+
+    public async Task ResumeSong(Track track, Device selectedDevice, long progress)
+    {
+        await ToggleSong(track, selectedDevice, "play", progress);
     }
 }

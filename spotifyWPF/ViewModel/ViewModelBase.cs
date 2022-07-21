@@ -71,9 +71,10 @@ namespace spotifyWPF.ViewModel
         }
 
         private PlaybackState _playbackState;
+
         public PlaybackState PlaybackState
         {
-            get { return _playbackState;}
+            get { return _playbackState; }
             set
             {
                 if (value is null) return;
@@ -82,6 +83,7 @@ namespace spotifyWPF.ViewModel
                 OnPlaybackStateChanged?.Invoke(this, EventArgs.Empty);
             }
         }
+
         public Device SelectedDevice { get; set; }
         public bool? DeviceControlIsFocused { get; set; } = null;
         private Visibility _deviceControlVisibility = Visibility.Collapsed;
@@ -95,9 +97,9 @@ namespace spotifyWPF.ViewModel
                 NotifyPropertyChanged();
                 OnDeviceControlClicked?.Invoke(this, EventArgs.Empty);
                 DeviceControlIsFocused = true;
-
             }
         }
+
         public bool IsPlaying { get; set; }
         private bool _authorized;
 
@@ -156,6 +158,7 @@ namespace spotifyWPF.ViewModel
                 NotifyPropertyChanged();
             }
         }
+
         public void DeviceControlUnfocused()
         {
             _deviceControlVisibility = Visibility.Collapsed;
@@ -163,6 +166,7 @@ namespace spotifyWPF.ViewModel
             NotifyPropertyChanged(nameof(DeviceControlVisibility));
             DeviceControlIsFocused = false;
         }
+
         public int Volume { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -172,9 +176,44 @@ namespace spotifyWPF.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public async void GetPlaybackState()
+        public async Task GetPlaybackState()
         {
             PlaybackState = await SpotifyRequest.GetPlaybackState();
+        }
+
+        public async Task PlaySong(Track track)
+        {
+            if (CheckIfPlaying(track))
+            {
+                
+                await SpotifyRequest.ResumeSong(track, SelectedDevice, PlaybackState.ProgressMS);
+                await Task.Delay(500);
+                await GetPlaybackState();
+            }
+            else
+            {
+                await SpotifyRequest.PlaySong(track, SelectedDevice);
+                await Task.Delay(500);
+                await GetPlaybackState();
+            }
+        }
+
+        private bool CheckIfPlaying(Track track)
+        {
+            return track.PlaylistID == PlaybackState.Track.PlaylistID &&
+                   track.SpotifyID == PlaybackState.Track.SpotifyID;
+        }
+
+        public async Task PauseSong(Track track)
+        {
+            await SpotifyRequest.PauseSong(track, SelectedDevice);
+            await Task.Delay(500);
+            await GetPlaybackState();
+        }
+
+        public async Task<bool> ToggleShuffle()
+        {
+            throw new NotImplementedException();
         }
     }
 }

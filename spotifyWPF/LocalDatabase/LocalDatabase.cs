@@ -49,6 +49,7 @@ namespace spotifyWPF.LocalDatabase
                     DROP TABLE IF EXISTS Playlists;
                     CREATE TABLE Playlists (
                     SpotifyID	varchar(100),
+                    SpotifyURI	varchar(100),
                     Name	varchar(100),
                     Description	varchar(100),
                     Link	varchar(256),
@@ -66,7 +67,7 @@ namespace spotifyWPF.LocalDatabase
                    Album	varchar(100),
                    AlbumArt	varchar(256),
                     DateAdded Date,
-                    ListIndex int,
+                    ContextPosition int,
                    DurationMS	bigint,
                    ID	INTEGER,
                    PRIMARY KEY(ID));
@@ -130,7 +131,7 @@ namespace spotifyWPF.LocalDatabase
                    command.Parameters.Add("$Album", SqliteType.Text).Value=track.Album;
                    command.Parameters.Add("$AlbumArt", SqliteType.Text).Value=track.AlbumArt;
                    command.Parameters.Add("$DateAdded", SqliteType.Text).Value=track.DateAdded;
-                   command.Parameters.Add("$ListIndex", SqliteType.Integer).Value=track.ListIndex;
+                   command.Parameters.Add("$ContextPosition", SqliteType.Integer).Value=track.ContextPosition;
                    command.Parameters.Add("$DurationMS", SqliteType.Integer).Value=track.DurationMS;
                    command.ExecuteNonQuery();
                }
