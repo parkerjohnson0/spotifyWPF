@@ -37,6 +37,7 @@
       <None Remove="View\Resources\Icons\search_clicked.png" />
       <None Remove="View\Resources\Icons\search_unclicked.png" />
       <None Remove="View\Resources\Icons\search_unclicked_alt.png" />
+      <None Remove="View\Resources\Icons\window_close.png" />
       <Content Include="View\Fonts\CircularStd-Black.otf">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
@@ -217,6 +218,9 @@
       <None Remove="View\Resources\Icons\repeat_green_once_alt.png" />
       <Content Include="View\Resources\Icons\repeat_green_once_alt.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="View\Resources\Icons\window_close.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
 

@@ -8,12 +8,18 @@
     <Compile Update="View\Controls\NavItemUC.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\Controls\WindowButtonsUC.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="View\Controls\AuthUC.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Controls\NavItemUC.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Controls\WindowButtonsUC.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

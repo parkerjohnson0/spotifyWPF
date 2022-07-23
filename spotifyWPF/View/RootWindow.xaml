@@ -11,13 +11,29 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1280" 
         MinWidth="800"
-        MinHeight="600">
+        MinHeight="600"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        >
+    <Window.Style>
+        <Style TargetType="{x:Type Window}">
+            <Setter Property="WindowChrome.WindowChrome">
+                <Setter.Value>
+                    <WindowChrome CaptionHeight="0"
+                                  CornerRadius="2"
+                                  GlassFrameThickness="0"
+                                  NonClientFrameEdges="None"
+                                  ResizeBorderThickness="5"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Style>
     <i:Interaction.Triggers>
        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
            <i:InvokeCommandAction Command="{Binding MouseUpCommand}"
                                   PassEventArgsToCommand="True"
                                   />
        </i:EventTrigger> 
+
     </i:Interaction.Triggers>
     <Window.DataContext>
         <vm:RootVM />
@@ -26,6 +42,7 @@
 
     </Window.Resources>
     <Grid>
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition />
@@ -73,6 +90,9 @@
                             DataContext="{Binding DevicesVm}"
                             VerticalAlignment="Bottom"
                             HorizontalAlignment="Right" />
+        <controls:WindowButtonsUC HorizontalAlignment="Right" VerticalAlignment="Top"
+                                  DataContext="{Binding}"/>
+
     </Grid>
 
 </Window>

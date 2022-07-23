@@ -8,7 +8,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:spotifyWPF.View.Controls"
              mc:Ignorable="d"
-             d:DesignHeight="90" d:DesignWidth="1000">
+             d:DesignHeight="90" d:DesignWidth="1000"
+             >
 
     <UserControl.DataContext>
         <vm:PlayerVM />
@@ -131,40 +132,58 @@
             </Grid>
             <Grid Grid.Column="1" Grid.RowSpan="3">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Image
+                    <StackPanel VerticalAlignment="Bottom" Height="46">
+                        <Image
                         Height="24">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseLeftButtonUp">
-                                <i:InvokeCommandAction Command="{Binding ShufflePlayerCommand}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <Image.Style>
-                            <Style TargetType="{x:Type Image}">
-                                <Setter Property="Image.Source" Value="/View/Resources/Icons/shuffle.png" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding PlaybackState.ShuffleState}"
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding ShufflePlayerCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <Image.Style>
+                                <Style TargetType="{x:Type Image}">
+                                    <Setter Property="Image.Source" Value="/View/Resources/Icons/shuffle.png" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding PlaybackState.ShuffleState}"
                                                  Value="True">
-                                        <Setter Property="Image.Source" Value="/View/Resources/Icons/shuffle_green.png"></Setter>
-                                    </DataTrigger>
-                                    <Trigger Property="Image.IsMouseOver" Value="True">
-                                        <Setter Property="Image.Source"
+                                            <Setter Property="Image.Source" Value="/View/Resources/Icons/shuffle_green.png"></Setter>
+                                        </DataTrigger>
+                                        <Trigger Property="Image.IsMouseOver" Value="True">
+                                            <Setter Property="Image.Source"
                                                 Value="/View/Resources/Icons/shuffle_alt.png" />
-                                    </Trigger>
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding PlaybackState.ShuffleState}" Value="True" />
-                                            <Condition
+                                        </Trigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding PlaybackState.ShuffleState}" Value="True" />
+                                                <Condition
                                                 Binding="{Binding RelativeSource={RelativeSource Self},
                                           Path=IsMouseOver}"
                                                 Value="True" />
-                                        </MultiDataTrigger.Conditions>
-                                        <Setter Property="Image.Source"
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Image.Source"
                                                 Value="/View/Resources/Icons/shuffle_green_alt.png" />
-                                    </MultiDataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <Ellipse Width="4" Height="4"
+                                 Fill="#1ca84d"
+                                 Margin="0,-1,3,-1">
+                            <Ellipse.Style>
+                                <Style TargetType="{x:Type Ellipse}">
+                                    <Setter Property="Fill" Value="#1ca84d"/>
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding PlaybackState.ShuffleState}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                    </StackPanel>
+                    
                     <Image
                         Height="24" Margin="20,0">
                         <Image.Style>
@@ -238,56 +257,79 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Image>
-                    <Image
+                    <StackPanel VerticalAlignment="Bottom" Height="48">
+                        <Image
                         Height="26">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseLeftButtonUp">
-                                <i:InvokeCommandAction Command="{Binding ChangeRepeatStateCommand}" CommandParameter="{Binding PlaybackState.RepeatState}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <Image.Style>
-                            <Style TargetType="{x:Type Image}">
-                                <Setter Property="Image.Source" Value="/View/Resources/Icons/repeat.png" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding PlaybackState.RepeatState}"
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding ChangeRepeatStateCommand}" CommandParameter="{Binding PlaybackState.RepeatState}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <Image.Style>
+                                <Style TargetType="{x:Type Image}">
+
+                                    <Setter Property="Image.Source" Value="/View/Resources/Icons/repeat.png" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding PlaybackState.RepeatState}"
                                                  Value="context">
-                                        <Setter Property="Image.Source" Value="/View/Resources/Icons/repeat_green.png"></Setter>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding PlaybackState.RepeatState}"
+                                            <Setter Property="Image.Source" Value="/View/Resources/Icons/repeat_green.png"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding PlaybackState.RepeatState}"
                                                  Value="track">
-                                        <Setter Property="Image.Source"
+                                            <Setter Property="Image.Source"
                                                 Value="/View/Resources/Icons/repeat_green_once.png">
-                                        </Setter>
-                                    </DataTrigger>
-                                    <Trigger Property="Image.IsMouseOver" Value="True">
-                                        <Setter Property="Image.Source" Value="/View/Resources/Icons/repeat_alt.png" />
-                                    </Trigger>
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding PlaybackState.RepeatState}" Value="track" />
-                                            <Condition
+                                            </Setter>
+                                        </DataTrigger>
+                                        <Trigger Property="Image.IsMouseOver" Value="True">
+                                            <Setter Property="Image.Source" Value="/View/Resources/Icons/repeat_alt.png" />
+                                        </Trigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding PlaybackState.RepeatState}" Value="track" />
+                                                <Condition
                                                 Binding="{Binding RelativeSource={RelativeSource Self},
                                           Path=IsMouseOver}"
                                                 Value="True" />
-                                        </MultiDataTrigger.Conditions>
-                                        <Setter Property="Image.Source"
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Image.Source"
                                                 Value="/View/Resources/Icons/repeat_green_once_alt.png" />
-                                    </MultiDataTrigger>
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding PlaybackState.RepeatState}" Value="context" />
-                                            <Condition
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding PlaybackState.RepeatState}" Value="context" />
+                                                <Condition
                                                 Binding="{Binding RelativeSource={RelativeSource Self},
                                           Path=IsMouseOver}"
                                                 Value="True" />
-                                        </MultiDataTrigger.Conditions>
-                                        <Setter Property="Image.Source"
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Image.Source"
                                                 Value="/View/Resources/Icons/repeat_green_alt.png" />
-                                    </MultiDataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
+                                        </MultiDataTrigger>
+
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <Ellipse Width="4" Height="4"
+                                 Fill="#1ca84d"
+                                 Margin="0,-1,0,-1">
+                            <Ellipse.Style>
+                                <Style TargetType="{x:Type Ellipse}">
+                                    <Setter Property="Fill" Value="#1ca84d"/>
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding PlaybackState.RepeatState}" Value="off">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding PlaybackState}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                    </StackPanel>
+                    
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1"

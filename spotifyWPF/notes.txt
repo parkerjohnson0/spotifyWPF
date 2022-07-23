@@ -42,7 +42,8 @@ todo
     use pkce auth flow. so that way token can be stored for longer. otherwise would have to refresh token every hour if access token not replace with refresh token. 
 
 long term
-    only update playlist if playlist has updated. spotify playlist has a field for this
+    
+    only update playlist if playlist has updated. spotify playlist has a field for this. snapshot id.
     create service to access spotify api. introduce rate limiting and retries
     recreate the scrolling text name for songs when a track's name is too long
     do I have to do all these events? i think some could be replaced

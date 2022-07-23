@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using spotifyWPF.View.Controls;
 using spotifyWPF.ViewModel.Commands;
+using spotifyWPF.ViewModel.Commands.WindowCommands;
 
 namespace spotifyWPF.ViewModel;
 
@@ -9,6 +10,8 @@ public class RootVM : ViewModelBase
 {
     public DevicesVM DevicesVm { get; set; }
     public MouseUpCommand MouseUpCommand { get; set; }
+    public CloseWindowCommand CloseWindowCommand { get; set; }
+    public ToggleMaximizeWindowCommand ToggleMaximizeWindowCommand { get; set; }
     private bool _deviceControlFocused;
 
     public bool DeviceControlFocused
@@ -21,6 +24,8 @@ public class RootVM : ViewModelBase
     {
         AppState.OnDeviceControlClicked += FocusDeviceControl;
         MouseUpCommand = new MouseUpCommand(this);
+        CloseWindowCommand = new CloseWindowCommand();
+        ToggleMaximizeWindowCommand = new ToggleMaximizeWindowCommand();
         DevicesVm = new DevicesVM(); 
     }
 
