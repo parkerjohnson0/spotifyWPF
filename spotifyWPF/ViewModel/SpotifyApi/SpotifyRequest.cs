@@ -19,6 +19,7 @@ public class SpotifyRequest
         _accessToken = accessToken;
     }
     private  string _playerUrl = "https://api.spotify.com/v1/me/player/";
+    private  string _userUrl = "https://api.spotify.com/v1/me/";
     private string _shufflePlaybackUrl = "https://api.spotify.com/v1/me/player/shuffle?state=";
     private string _changeRepeatStateUrl = "https://api.spotify.com/v1/me/player/repeat?state=";
     private  HttpClient _httpClient = new HttpClient();
@@ -142,5 +143,22 @@ public class SpotifyRequest
         req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
         HttpResponseMessage resp = await _httpClient.SendAsync(req);
         return resp.StatusCode == HttpStatusCode.NoContent;
+    }
+
+    public async Task<User> GetUser()
+    {
+        HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, _userUrl);
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+        HttpResponseMessage resp = await _httpClient.SendAsync(req);
+        if (resp.StatusCode == HttpStatusCode.OK)
+        {
+            JObject obj = JObject.Parse(resp.Content.ReadAsStringAsync().Result);
+            return new User
+            {
+                UserName = obj.SelectToken("display_name").ToString(),
+                UserImage= obj.SelectToken("images[0].url").ToString()
+            };
+        }
+        return new User();
     }
 }

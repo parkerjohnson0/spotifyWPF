@@ -12,13 +12,14 @@
         Title="MainWindow" Height="720" Width="1280" 
         MinWidth="800"
         MinHeight="600"
+        WindowStyle="None"
         MouseLeftButtonDown="Window_MouseLeftButtonDown"
         >
     <Window.Style>
         <Style TargetType="{x:Type Window}">
             <Setter Property="WindowChrome.WindowChrome">
                 <Setter.Value>
-                    <WindowChrome CaptionHeight="0"
+                    <WindowChrome CaptionHeight="65"
                                   CornerRadius="2"
                                   GlassFrameThickness="0"
                                   NonClientFrameEdges="None"
@@ -53,13 +54,15 @@
                 <ColumnDefinition Width="6*" />
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
-            <controls:DisplayUC Grid.Column="1" />
+            <controls:DisplayUC Grid.Column="1"
+                                WindowChrome.IsHitTestVisibleInChrome="True"/>
+            <controls:BannerUC Grid.Column="1"/>
             <controls:PlayerUC Grid.Row="1" Grid.ColumnSpan="3" Height="90" />
             <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Left"
                           >
                 <GridSplitter.Style>
                     <Style TargetType="{x:Type GridSplitter}">
-                        <Setter Property="Background" Value="#121212"></Setter>
+                        <Setter Property="Background" Value="Transparent"></Setter>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" Value="#404040"></Setter>
@@ -69,8 +72,9 @@
                 </GridSplitter.Style>
             </GridSplitter>
             <controls:NavUC Grid.Column="0"
+                            WindowChrome.IsHitTestVisibleInChrome="True"
                             />
-            <controls:FriendsUC Grid.Column="2" />
+            <controls:FriendsUC Grid.Column="2" />  
         </Grid>
         <controls:AuthUC Height="100"
                          Width="240">
@@ -91,7 +95,9 @@
                             VerticalAlignment="Bottom"
                             HorizontalAlignment="Right" />
         <controls:WindowButtonsUC HorizontalAlignment="Right" VerticalAlignment="Top"
+                                  WindowChrome.IsHitTestVisibleInChrome="True"
                                   DataContext="{Binding}"/>
+
 
     </Grid>
 

@@ -217,5 +217,11 @@ namespace spotifyWPF.ViewModel
             await Task.Delay(200);
             await GetPlaybackState();
         }
+
+        public async Task<User> GetUser()
+        {
+            User user = await SpotifyRequest.GetUser();
+            return user;
+        }
     }
 }

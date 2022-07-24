@@ -341,7 +341,18 @@
                 </Style.Triggers>
             </Style>
             <DataTemplate x:Key="Playlist" DataType="{x:Type vm:DisplayVM}">
-                <ScrollViewer x:Name="ScrollBar"
+                <Grid
+                    >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="65"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                <!--<Grid Grid.Row="0"
+                      Background="Red">
+                    
+                </Grid>-->
+                <ScrollViewer Grid.Row="1"
+                    x:Name="ScrollBar"
                               Background="#121212">
                     <!--<ScrollViewer.Resources>
                         <Style TargetType="{x:Type ScrollBar}" >
@@ -356,7 +367,7 @@
                     </ScrollViewer.Resources>-->
                     <Grid Background="#121212">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="250" />
+                            <RowDefinition Height="225" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
@@ -365,11 +376,11 @@
                                     <ColumnDefinition Width="240" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Image Width="200" Height="200"
+                                    <Image Width="200" Height="200"
                                        Margin="10,0"
                                        Grid.Column="0" VerticalAlignment="Bottom"
                                        Source="{Binding SelectedPlaylistItem.Image}">
-                                </Image>
+                                    </Image>
                                 <StackPanel Grid.Column="1" VerticalAlignment="Bottom"
                                             Margin="10,0,0,0">
                                     <TextBlock Text="PLAYLIST"
@@ -751,6 +762,8 @@
                         <behaviors:ScrollIntoViewBehavior />
                     </i:Interaction.Behaviors>
                 </ScrollViewer>
+                </Grid>
+
             </DataTemplate>
             <DataTemplate x:Key="Home" DataType="{x:Type vm:DisplayVM}">
                 <Grid Background="#121212">

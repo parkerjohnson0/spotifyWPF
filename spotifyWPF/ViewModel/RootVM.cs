@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
+using spotifyWPF.Model.App;
 using spotifyWPF.View.Controls;
 using spotifyWPF.ViewModel.Commands;
 using spotifyWPF.ViewModel.Commands.WindowCommands;
@@ -28,6 +30,7 @@ public class RootVM : ViewModelBase
         ToggleMaximizeWindowCommand = new ToggleMaximizeWindowCommand();
         DevicesVm = new DevicesVM(); 
     }
+
 
     private void FocusDeviceControl(object? sender, System.EventArgs e)
     {

@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="spotifyWPF.View.Controls.BannerUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:spotifyWPF.ViewModel"
+             xmlns:local="clr-namespace:spotifyWPF.View.Controls"
+             mc:Ignorable="d"
+             >
+            <UserControl.DataContext>
+               <vm:BannerVM/>
+            </UserControl.DataContext> 
+            <Grid 
+                  Background="Transparent"
+                  VerticalAlignment="Top"
+            Height="65">
+                <Border Background="#282828"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,30,0"
+                        CornerRadius="15"
+                      Height="30">
+                    <Grid  
+>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Width="26"
+                                 Height="26"
+                                 Margin="2,0,0,0"
+                                CornerRadius="25"
+                                 HorizontalAlignment="Left">
+                            <Border.Background>
+                                <ImageBrush 
+                                    Stretch="UniformToFill"
+                                    d:ImageSource="https://i.scdn.co/image/ab6775700000ee85b98f97c411ae58d79e6662f3"
+                                    ImageSource="{Binding User.UserImage}"/>
+                            </Border.Background>
+                        </Border>
+                        <TextBlock 
+                            HorizontalAlignment="Left"
+                            Margin="0,0,10,0"
+                            FontSize="16"
+                            VerticalAlignment="Center"
+                            Foreground="White"
+                            FontFamily="{StaticResource CircularBold}"
+                            Grid.Column="1"
+                            d:Text="carverj95"
+                            Text="{Binding User.UserName}"/>
+                    </Grid>
+                </Border>
+
+            </Grid>
+</UserControl>
